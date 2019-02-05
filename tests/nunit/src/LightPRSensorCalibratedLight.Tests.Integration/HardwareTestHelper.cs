@@ -38,7 +38,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
 		public int ResetTriggerPin = 4;
 
-		public string IrrigatorStartText = "Starting irrigator";
+		public string IlluminatorStartText = "Starting light controller";
 
 		public HardwareTestHelper()
 		{
@@ -188,8 +188,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 			// Re-open the connection to the device
 			ConnectDevice ();
 
-			// Ensure the irrigator restarted
-			WaitForText (IrrigatorStartText);
+			// Ensure the ILLUMINATOR restarted
+			WaitForText (IlluminatorStartText);
 		}
 		#endregion
 

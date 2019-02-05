@@ -2,7 +2,7 @@
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-	public class ThresholdEEPROMTestHelper : GreenSenseIrrigatorHardwareTestHelper
+	public class ThresholdEEPROMTestHelper : GreenSenseIlluminatorHardwareTestHelper
 	{
 		public int Threshold = 30;
 

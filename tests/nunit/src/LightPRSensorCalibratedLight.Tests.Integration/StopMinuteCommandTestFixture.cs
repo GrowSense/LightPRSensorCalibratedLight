@@ -11,14 +11,14 @@ using System.IO.Ports;
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
 	[TestFixture(Category = "Integration")]
-	public class LightBurstOnTimeEEPROMTestFixture : BaseTestFixture
+	public class StopMinuteCommandTestFixture : BaseTestFixture
 	{
 		[Test]
-		public void Test_SetLightBurstOnTime_1sec()
+		public void Test_SetStopMinute_10()
 		{
-			using (var helper = new LightBurstOnTimeEEPROMTestHelper())
+			using (var helper = new StopMinuteCommandTestHelper())
 			{
-				helper.LightBurstOnTime = 1;
+				helper.StopMinute = 10;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
@@ -26,16 +26,16 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 				helper.SimulatorPort = GetSimulatorPort();
 				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
 
-				helper.TestLightBurstOnTimeEEPROM();
+				helper.TestStopMinuteCommand();
 			}
 		}
 
 		[Test]
-		public void Test_SetLightBurstOnTime_5sec()
+		public void Test_SetStopMinute_30()
 		{
-			using (var helper = new LightBurstOnTimeEEPROMTestHelper())
+			using (var helper = new StopMinuteCommandTestHelper())
 			{
-				helper.LightBurstOnTime = 5;
+				helper.StopMinute = 30;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
@@ -43,9 +43,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 				helper.SimulatorPort = GetSimulatorPort();
 				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
 
-				helper.TestLightBurstOnTimeEEPROM();
+				helper.TestStopMinuteCommand();
 			}
 		}
-
 	}
 }

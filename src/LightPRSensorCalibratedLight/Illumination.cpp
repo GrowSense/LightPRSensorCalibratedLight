@@ -13,14 +13,32 @@
 int threshold = 30;
 
 bool lightIsOn = 0;
+bool lightIsNeeded = 0;
 long lightStartTime = 0;
 long lastLightFinishTime = 0;
 
-//int lightStatus = LIGHT_STATUS_AUTO_PWM;
-int lightStatus = LIGHT_STATUS_TIMER;
+//int lightMode = LIGHT_MODE_AUTO_PWM;
+int lightMode = LIGHT_MODE_TIMER;
 
 #define thresholdIsSetEEPROMFlagAddress 20
 #define thresholdEEPROMAddress 21
+
+int startHour = 6;
+int startMinute = 0;
+int stopHour = 18;
+int stopMinute = 0;
+
+#define lightStartHourIsSetEEPROMFlagAddress 24
+#define lightStartHourEEPROMAddress 25
+
+#define lightStartMinuteIsSetEEPROMFlagAddress 28
+#define lightStartMinuteEEPROMAddress 29
+
+#define lightStopHourIsSetEEPROMFlagAddress 32
+#define lightStopHourEEPROMAddress 33
+
+#define lightStopMinuteIsSetEEPROMFlagAddress 36
+#define lightStopMinuteEEPROMAddress 37
 
 /* Setup */
 void setupIllumination()
@@ -28,6 +46,10 @@ void setupIllumination()
   pinMode(LIGHT_PIN, OUTPUT);
 
   setupThreshold();
+  setupStartHour();
+  setupStartMinute();
+  setupStopHour();
+  setupStopMinute();
 }
 
 void setupThreshold()
@@ -36,17 +58,47 @@ void setupThreshold()
 
   if (eepromIsSet)
   {
-    //if (isDebugMode)
-    //	Serial.println("EEPROM read interval value has been set. Loading.");
-
     threshold = getThreshold();
   }
-  else
+}
+
+void setupStartHour()
+{
+  bool eepromIsSet = EEPROM.read(lightStartHourIsSetEEPROMFlagAddress) == 99;
+
+  if (eepromIsSet)
   {
-    //if (isDebugMode)
-    //  Serial.println("EEPROM read interval value has not been set. Using defaults.");
-    
-    //setThreshold(threshold);
+    startHour = getLightStartHour();
+  }
+}
+
+void setupStartMinute()
+{
+  bool eepromIsSet = EEPROM.read(lightStartMinuteIsSetEEPROMFlagAddress) == 99;
+
+  if (eepromIsSet)
+  {
+    startMinute = getLightStartMinute();
+  }
+}
+
+void setupStopHour()
+{
+  bool eepromIsSet = EEPROM.read(lightStopHourIsSetEEPROMFlagAddress) == 99;
+
+  if (eepromIsSet)
+  {
+    stopHour = getLightStopHour();
+  }
+}
+
+void setupStopMinute()
+{
+  bool eepromIsSet = EEPROM.read(lightStopMinuteIsSetEEPROMFlagAddress) == 99;
+
+  if (eepromIsSet)
+  {
+    stopMinute = getLightStopMinute();
   }
 }
 
@@ -58,19 +110,23 @@ void illuminateIfNeeded(RtcDS1302<ThreeWire> clock)
     Serial.println("Irrigating (if needed)");
   }
 
-  if (lightStatus == LIGHT_STATUS_AUTO_THRESHOLD)
+  if (lightMode == LIGHT_MODE_AUTO_ABOVETHRESHOLD)
   {
-    illuminateByThresholdIfNeeded();
+    illuminateByThresholdIfNeeded(true);
   }
-  if (lightStatus == LIGHT_STATUS_AUTO_PWM)
+  else if (lightMode == LIGHT_MODE_AUTO_BELOWTHRESHOLD)
+  {
+    illuminateByThresholdIfNeeded(false);
+  }
+  else if (lightMode == LIGHT_MODE_AUTO_PWM)
   {
     illuminateByPWMIfNeeded();
   }
-  if (lightStatus == LIGHT_STATUS_TIMER)
+  else if (lightMode == LIGHT_MODE_TIMER)
   {
     illuminateByTimerIfNeeded(clock);
   }
-  else if(lightStatus == LIGHT_STATUS_ON)
+  else if(lightMode == LIGHT_MODE_ON)
   {
     if (!lightIsOn)
       lightOn();
@@ -82,19 +138,56 @@ void illuminateIfNeeded(RtcDS1302<ThreeWire> clock)
   }
 }
 
-void illuminateByThresholdIfNeeded()
+void illuminateByThresholdIfNeeded(bool onWhenAbove)
 {
   bool readingHasBeenTaken = lastLightPRSensorReadingTime > 0;
-  bool lightIsNeeded = lightLevelCalibrated <= threshold && readingHasBeenTaken;
+  
+  if (readingHasBeenTaken)
+  {
+    bool lightIsNeeded = checkLightNeededByThreshold(onWhenAbove);    
+    
+    Serial.println("Light is needed:");
+    Serial.println(lightIsNeeded);
 
-  if (lightIsOn && !lightIsNeeded)
-  {
-    lightOff();
+    if (lightIsOn && !lightIsNeeded)
+    {
+      lightOff();
+    }
+    else if (!lightIsOn && lightIsNeeded)
+    {
+      lightOn();
+    }
   }
-  else if (!lightIsOn && lightIsNeeded)
+}
+
+bool checkLightNeededByThreshold(bool onWhenAbove)
+{
+  if (isDebugMode)
   {
-    lightOn();
+    Serial.println("Checking if light is needed in threshold mode");
+      
+    Serial.print("Light level: ");
+    Serial.println(lightLevelCalibrated);
+    Serial.print("Threshold: ");
+    Serial.println(threshold);  
   }
+    
+  if (onWhenAbove)
+  {  
+    lightIsNeeded = lightLevelCalibrated >= threshold;
+    
+    if (isDebugMode)
+      Serial.println("Light is needed when above threshold");
+  }
+  else
+  {
+    lightIsNeeded = lightLevelCalibrated < threshold;
+    
+    if (isDebugMode)
+      Serial.println("Light is needed when above threshold");
+  }
+      
+  return lightIsNeeded;
 }
 
 void lightPwm(int pwmValue)
@@ -117,30 +210,24 @@ void illuminateByTimerIfNeeded(RtcDS1302<ThreeWire> rtc)
  // Serial.println("Controlling illumination by timer");
 
   RtcDateTime now = rtc.GetDateTime();
-  
-  int startHour = 6;
-  int startMinute = 0;
-  
-  int stopHour = 15;
-  int stopMinute = 8;
-    
+      
   bool isAfterStartTime = now.Hour() >= startHour
-    && now.Minute() >= startMinute;
+    && now.Hour() >= startHour;
     
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("Is after start time: ");
     Serial.println(isAfterStartTime);
-  }
+  }*/
     
   bool isBeforeStopTime = false;
   bool isBeforeStopHour = now.Hour() < stopHour;
   
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("Is before stop hour: ");
     Serial.println(isBeforeStopHour);
-  }
+  }*/
     
   if (isBeforeStopHour)
     isBeforeStopTime = true;
@@ -148,19 +235,19 @@ void illuminateByTimerIfNeeded(RtcDS1302<ThreeWire> rtc)
   {
     bool isStopHour = now.Hour() == stopHour;
     
-    if (isDebugMode)
+    /*if (isDebugMode)
     {
       Serial.print("Is stop hour: ");
       Serial.println(isStopHour);
-    }
-    isBeforeStopTime = isStopHour && now.Minute() < stopMinute;
+    }*/
+    isBeforeStopTime = isStopHour && now.Hour() < stopHour;
   }
     
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("Is before stop time: ");
     Serial.println(isBeforeStopTime);
-  }
+  }*/
  
   bool lightExpected = isAfterStartTime && isBeforeStopTime;
   
@@ -169,6 +256,8 @@ void illuminateByTimerIfNeeded(RtcDS1302<ThreeWire> rtc)
 
 void lightOn()
 {
+  Serial.println("Turning light on");
+
   digitalWrite(LIGHT_PIN, HIGH);
   lightIsOn = true;
 
@@ -177,13 +266,15 @@ void lightOn()
 
 void lightOff()
 {
+  Serial.println("Turning light off");
+  
   digitalWrite(LIGHT_PIN, LOW);
   lightIsOn = false;
 
   lastLightFinishTime = millis();
 }
 
-void setLightStatus(char* msg)
+void setLightMode(char* msg)
 {
   int length = strlen(msg);
 
@@ -199,13 +290,13 @@ void setLightStatus(char* msg)
 //    Serial.println("Value:");
 //    Serial.println(value);
 
-    setLightStatus(value);
+    setLightMode(value);
   }
 }
 
-void setLightStatus(int newStatus)
+void setLightMode(int newStatus)
 {
-  lightStatus = newStatus;
+  lightMode = newStatus;
 }
 
 void setThreshold(char* msg)
@@ -229,15 +320,15 @@ void setThreshold(int newThreshold)
 {
   threshold = newThreshold;
 
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("Setting threshold to EEPROM: ");
     Serial.println(threshold);
-  }
+  }*/
 
   EEPROM.write(thresholdEEPROMAddress, newThreshold);
   
-  setThresholdIsSetEEPROMFlag();
+  setEEPROMFlag(thresholdIsSetEEPROMFlagAddress);
 }
 
 void setThresholdToCurrent()
@@ -256,7 +347,7 @@ int getThreshold()
     return threshold;
   else
   {
-    int threshold = value; // Must multiply by 4 to get the original value
+    int threshold = value;
 
     if (isDebugMode)
     {
@@ -268,15 +359,209 @@ int getThreshold()
   }
 }
 
-void setThresholdIsSetEEPROMFlag()
+/* Timing */
+void setLightStartHour(char* msg)
 {
+  int length = strlen(msg);
+
+  if (length > 0)
+  {
+    int value = readInt(msg, 1, length-1);
+
+//    Serial.println("Value:");
+//    Serial.println(value);
+
+    setLightStartHour(value);
+  }
+}
+
+void setLightStartHour(int newStartHour)
+{
+  startHour = newStartHour;
+
   if (isDebugMode)
   {
-    Serial.print("Setting EEPROM 'threshold is set flag'");
+    Serial.print("Setting start hour to EEPROM: ");
+    Serial.println(startHour);
   }
 
-  if (EEPROM.read(thresholdIsSetEEPROMFlagAddress) != 99)
-    EEPROM.write(thresholdIsSetEEPROMFlagAddress, 99);
+  EEPROM.write(lightStartHourEEPROMAddress, newStartHour);
+  
+  setEEPROMFlag(lightStartHourIsSetEEPROMFlagAddress);
+}
+
+int getLightStartHour()
+{
+  int value = EEPROM.read(lightStartHourEEPROMAddress);
+
+  if (value < 0
+      || value > 24)
+    return startHour;
+  else
+  {
+    int startHour = value;
+
+    if (isDebugMode)
+    {
+      Serial.print("Start hour found in EEPROM: ");
+      Serial.println(startHour);
+    }
+
+    return startHour;
+  }
+}
+
+void setLightStartMinute(char* msg)
+{
+  int length = strlen(msg);
+
+  if (length > 0)
+  {
+    int value = readInt(msg, 1, length-1);
+
+//    Serial.println("Value:");
+//    Serial.println(value);
+
+    setLightStartMinute(value);
+  }
+}
+
+void setLightStartMinute(int newStartMinute)
+{
+  startMinute = newStartMinute;
+
+  if (isDebugMode)
+  {
+    Serial.print("Setting start minute to EEPROM: ");
+    Serial.println(startMinute);
+  }
+
+  EEPROM.write(lightStartMinuteEEPROMAddress, newStartMinute);
+  
+  setEEPROMFlag(lightStartMinuteIsSetEEPROMFlagAddress);
+}
+
+int getLightStartMinute()
+{
+  int value = EEPROM.read(lightStartMinuteEEPROMAddress);
+
+  if (value < 0
+      || value > 60)
+    return startMinute;
+  else
+  {
+    int startMinute = value;
+
+    if (isDebugMode)
+    {
+      Serial.print("Start minute found in EEPROM: ");
+      Serial.println(startMinute);
+    }
+
+    return startMinute;
+  }
+}
+
+void setLightStopHour(char* msg)
+{
+  int length = strlen(msg);
+
+  if (length > 1)
+  {
+    int value = readInt(msg, 1, length-1);
+
+//    Serial.println("Value:");
+//    Serial.println(value);
+
+    setLightStopHour(value);
+  }
+}
+
+void setLightStopHour(int newStopHour)
+{
+  stopHour = newStopHour;
+
+  if (isDebugMode)
+  {
+    Serial.print("Setting stop hour to EEPROM: ");
+    Serial.println(stopHour);
+  }
+
+  EEPROM.write(lightStopHourEEPROMAddress, newStopHour);
+  
+  setEEPROMFlag(lightStopHourIsSetEEPROMFlagAddress);
+}
+
+int getLightStopHour()
+{
+  int value = EEPROM.read(lightStopHourEEPROMAddress);
+
+  if (value < 0
+      || value > 24)
+    return stopHour;
+  else
+  {
+    int stopHour = value;
+
+    if (isDebugMode)
+    {
+      Serial.print("Stop hour found in EEPROM: ");
+      Serial.println(stopHour);
+    }
+
+    return stopHour;
+  }
+}
+
+void setLightStopMinute(char* msg)
+{
+  int length = strlen(msg);
+
+  if (length > 1)
+  {
+    int value = readInt(msg, 1, length-1);
+
+//    Serial.println("Value:");
+//    Serial.println(value);
+
+    setLightStopMinute(value);
+  }
+}
+
+void setLightStopMinute(int newStopMinute)
+{
+  stopMinute = newStopMinute;
+
+  if (isDebugMode)
+  {
+    Serial.print("Setting light stop minute to EEPROM: ");
+    Serial.println(stopMinute);
+  }
+
+  EEPROM.write(lightStopMinuteEEPROMAddress, newStopMinute);
+  
+  setEEPROMFlag(lightStopMinuteIsSetEEPROMFlagAddress);
+}
+
+int getLightStopMinute()
+{
+  int value = EEPROM.read(lightStopMinuteEEPROMAddress);
+
+  if (value < 0
+      || value > 60)
+    return stopMinute;
+  else
+  {
+    int stopMinute = value;
+
+    if (isDebugMode)
+    {
+      Serial.print("Stop minute found in EEPROM: ");
+      Serial.println(stopMinute);
+    }
+
+    return stopMinute;
+  }
 }
 
 /* Restore defaults */
@@ -291,14 +576,9 @@ void restoreDefaultThreshold()
 {
   Serial.println("Reset threshold");
 
-  removeThresholdEEPROMIsSetFlag();
+  removeEEPROMFlag(thresholdIsSetEEPROMFlagAddress);
 
   threshold = 30;
 
   setThreshold(threshold);
-}
-
-void removeThresholdEEPROMIsSetFlag()
-{
-    EEPROM.write(thresholdIsSetEEPROMFlagAddress, 0);
 }

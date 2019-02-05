@@ -11,10 +11,9 @@
 
 bool lightPRSensorIsOn = true;
 long lastSensorOnTime = 0;
-int delayAfterTurningLightPRSensorOn = 3 * 1000;
 
 bool lightPRSensorReadingHasBeenTaken = false;
-long lightPRSensorReadingIntervalInSeconds = 5;
+long lightPRSensorReadingIntervalInSeconds = 1;
 long lastLightPRSensorReadingTime = 0; // Milliseconds
 
 int lightLevelCalibrated = 0;
@@ -41,35 +40,6 @@ void setupLightPRSensor()
   setupLightPRSensorReadingInterval();
 
   pinMode(lightPRSensorPowerPin, OUTPUT);
-
-  // If the interval is less than specified delay then turn the sensor on and leave it on (otherwise it will be turned on each time it's needed)
-  if (secondsToMilliseconds(lightPRSensorReadingIntervalInSeconds) <= delayAfterTurningLightPRSensorOn)
-  {
-    turnLightPRSensorOn();
-  }
-}
-
-/* Sensor On/Off */
-void turnLightPRSensorOn()
-{
-  if (isDebugMode)
-    Serial.println("Turning sensor on");
-
-  digitalWrite(lightPRSensorPowerPin, HIGH);
-
-  lastSensorOnTime = millis();
-
-  lightPRSensorIsOn = true;
-}
-
-void turnLightPRSensorOff()
-{
-  if (isDebugMode)
-    Serial.println("Turning sensor off");
-
-  digitalWrite(lightPRSensorPowerPin, LOW);
-
-  lightPRSensorIsOn = false;
 }
 
 /* Sensor Readings */
@@ -83,110 +53,22 @@ void takeLightPRSensorReading()
     if (isDebugMode)
       Serial.println("Sensor reading is due");
 
-  	bool sensorGetsTurnedOff = secondsToMilliseconds(lightPRSensorReadingIntervalInSeconds) > delayAfterTurningLightPRSensorOn;
-  
-  	bool sensorIsOffAndNeedsToBeTurnedOn = !lightPRSensorIsOn && sensorGetsTurnedOff;
-  
-  	bool postSensorOnDelayHasPast = lastSensorOnTime + delayAfterTurningLightPRSensorOn < millis();
-  
-  	bool lightPRSensorIsOnAndReady = lightPRSensorIsOn && (postSensorOnDelayHasPast || !sensorGetsTurnedOff);
+    if (isDebugMode)
+      Serial.println("Preparing to take reading");
 
-        bool lightPRSensorIsOnButSettling = lightPRSensorIsOn && !postSensorOnDelayHasPast && sensorGetsTurnedOff;
+    lastLightPRSensorReadingTime = millis();
 
-/*    if (isDebugMode)
-    {
-        Serial.print("  Sensor is on: ");
-        Serial.println(lightPRSensorIsOn);
-        
-        Serial.print("  Last sensor on time: ");
-        Serial.print(millisecondsToSecondsWithDecimal(millis() - lastSensorOnTime));
-        Serial.println(" seconds ago");
-        
-        Serial.print("  Sensor gets turned off: ");
-        Serial.println(sensorGetsTurnedOff);
-        
-        Serial.print("  Sensor is off and needs to be turned on: ");
-        Serial.println(sensorIsOffAndNeedsToBeTurnedOn);
-        
-        Serial.print("  Post sensor on delay has past: ");
-        Serial.println(postSensorOnDelayHasPast);
-        
-        Serial.print("  Sensor is off and needs to be turned on: ");
-        Serial.println(sensorIsOffAndNeedsToBeTurnedOn);
-        
-        Serial.print("  Sensor is on and ready: ");
-        Serial.println(lightPRSensorIsOnAndReady);
-        
-        Serial.print("  Sensor is on but settling: ");
-        Serial.println(lightPRSensorIsOnButSettling);
-        
-        if (lightPRSensorIsOnButSettling)
-        {
-          Serial.print("    Time remaining to settle: ");
-          long timeRemainingToSettle = lastSensorOnTime + delayAfterTurningLightPRSensorOn - millis();
-          Serial.print(millisecondsToSecondsWithDecimal(timeRemainingToSettle));
-          Serial.println(" seconds");
-        }
-    }*/
+    lightLevelRaw = getAverageLightPRSensorReading();
 
-    if (sensorIsOffAndNeedsToBeTurnedOn)
-    {
-      turnLightPRSensorOn();
-    }
-    else if (lightPRSensorIsOnButSettling)
-    {
-      // Skip this loop. Wait for the sensor to settle in before taking a reading.
-      if (isDebugMode)
-        Serial.println("Soil moisture sensor is settling after being turned on");
-    }
-    else if (lightPRSensorIsOnAndReady)
-    {
-      if (isDebugMode)
-        Serial.println("Preparing to take reading");
+    lightLevelCalibrated = calculateLightLevel(lightLevelRaw);
 
-      lastLightPRSensorReadingTime = millis();
-      
-      // Remove the delay (after turning soil moisture sensor on) from the last reading time to get more accurate timing
-      if (sensorGetsTurnedOff)
-        lastLightPRSensorReadingTime = lastLightPRSensorReadingTime - delayAfterTurningLightPRSensorOn;
+    if (lightLevelCalibrated < 0)
+      lightLevelCalibrated = 0;
 
-      lightLevelRaw = getAverageLightPRSensorReading();
+    if (lightLevelCalibrated > 100)
+      lightLevelCalibrated = 100;
 
-      lightLevelCalibrated = calculateLightLevel(lightLevelRaw);
-
-      if (lightLevelCalibrated < 0)
-        lightLevelCalibrated = 0;
-
-      if (lightLevelCalibrated > 100)
-        lightLevelCalibrated = 100;
-
-      lightPRSensorReadingHasBeenTaken = true;
-
-      if (secondsToMilliseconds(lightPRSensorReadingIntervalInSeconds) > delayAfterTurningLightPRSensorOn)
-      {
-        turnLightPRSensorOff();
-      }
-    }
-  }
-  else
-  {
-    /*if (isDebugMode)
-    {
-      Serial.println("Sensor reading is not due");
-      
-      Serial.print("  Last soil moisture sensor reading time: ");
-      Serial.print(millisecondsToSecondsWithDecimal(lastLightPRSensorReadingTime));
-      Serial.println(" seconds");
-      
-      Serial.print("  Last soil moisture sensor reading interval: ");
-      Serial.print(lightPRSensorReadingIntervalInSeconds);
-      Serial.println(" seconds");
-    
-      int timeLeftUntilNextReading = lastLightPRSensorReadingTime + secondsToMilliseconds(lightPRSensorReadingIntervalInSeconds) - millis();
-      Serial.print("  Time left until next soil moisture sensor reading: ");
-      Serial.print(millisecondsToSecondsWithDecimal(timeLeftUntilNextReading));
-      Serial.println(" seconds");
-    }*/
+    lightPRSensorReadingHasBeenTaken = true;
   }
 }
 
@@ -253,9 +135,6 @@ void setLightPRSensorReadingInterval(long newValue)
   lightPRSensorReadingIntervalInSeconds = newValue; 
 
   serialOutputIntervalInSeconds = newValue;
-  
-  if (secondsToMilliseconds(newValue) <= delayAfterTurningLightPRSensorOn)
-    turnLightPRSensorOn();
 }
 
 long getLightPRSensorReadingInterval()
@@ -281,11 +160,6 @@ void setEEPROMLightPRSensorReadingIntervalIsSetFlag()
 {
   if (EEPROM.read(lightPRSensorReadIntervalIsSetFlagAddress) != 99)
     EEPROM.write(lightPRSensorReadIntervalIsSetFlagAddress, 99);
-}
-
-void removeEEPROMLightPRSensorReadingIntervalIsSetFlag()
-{
-    EEPROM.write(lightPRSensorReadIntervalIsSetFlagAddress, 0);
 }
 
 /* Calibration */
@@ -466,7 +340,7 @@ void restoreDefaultLightPRSensorSettings()
 
 void restoreDefaultLightPRSensorReadingIntervalSettings()
 {
-  removeEEPROMLightPRSensorReadingIntervalIsSetFlag();
+  removeEEPROMFlag(lightPRSensorReadIntervalIsSetFlagAddress);
 
   lightPRSensorReadingIntervalInSeconds = 5;
   serialOutputIntervalInSeconds = 5;

@@ -62,10 +62,10 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
 		public string GetDevicePort()
 		{
-			var devicePort = Environment.GetEnvironmentVariable("IRRIGATOR_PORT");
+			var devicePort = Environment.GetEnvironmentVariable("ILLUMINATOR_PORT");
 
 			if (String.IsNullOrEmpty(devicePort))
-				devicePort = "/dev/ttyUSB0";
+				devicePort = "/dev/ttyUSB2";
 
 			Console.WriteLine("Device port: " + devicePort);
 
@@ -74,10 +74,10 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
 		public string GetSimulatorPort()
 		{
-			var simulatorPort = Environment.GetEnvironmentVariable("IRRIGATOR_SIMULATOR_PORT");
+			var simulatorPort = Environment.GetEnvironmentVariable("ILLUMINATOR_SIMULATOR_PORT");
 
 			if (String.IsNullOrEmpty(simulatorPort))
-				simulatorPort = "/dev/ttyUSB1";
+				simulatorPort = "/dev/ttyUSB3";
 
 			Console.WriteLine("Simulator port: " + simulatorPort);
 
@@ -86,7 +86,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
 		public int GetDeviceSerialBaudRate()
 		{
-			var baudRateString = Environment.GetEnvironmentVariable ("IRRIGATOR_BAUD_RATE");
+			var baudRateString = Environment.GetEnvironmentVariable ("ILLUMINATOR_BAUD_RATE");
 			
 			var baudRate = 0;
 			
@@ -102,7 +102,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
 		public int GetSimulatorSerialBaudRate()
 		{
-			var baudRateString = Environment.GetEnvironmentVariable ("IRRIGATOR_SIMULATOR_BAUD_RATE");
+			var baudRateString = Environment.GetEnvironmentVariable ("ILLUMINATOR_SIMULATOR_BAUD_RATE");
 			
 			var baudRate = 0;
 			

@@ -2,7 +2,7 @@
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-	public class CalibrationEEPROMTestHelper : GreenSenseIrrigatorHardwareTestHelper
+	public class CalibrationEEPROMTestHelper : GreenSenseIlluminatorHardwareTestHelper
 	{
 		public string Label;
 		public string Letter;

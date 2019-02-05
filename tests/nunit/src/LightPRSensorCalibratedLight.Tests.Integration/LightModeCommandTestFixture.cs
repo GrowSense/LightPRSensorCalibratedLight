@@ -1,17 +1,24 @@
 ﻿using System;
 using NUnit.Framework;
+using duinocom;
+using System.Threading;
+using ArduinoSerialControllerClient;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.IO.Ports;
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
 	[TestFixture(Category = "Integration")]
-	public class LightPRSensorPowerTestFixture : BaseTestFixture
+	public class LightModeCommandTestFixture : BaseTestFixture
 	{
 		[Test]
-		public void Test_LightPRSensorPower_AlwaysOn_1SecondReadInterval()
+		public void Test_SetLightToOn()
 		{
-			using (var helper = new LightPRSensorPowerTestHelper())
+			using (var helper = new LightModeCommandTestHelper())
 			{
-				helper.ReadInterval = 1;
+				helper.LightCommand = LightMode.On;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
@@ -19,16 +26,16 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 				helper.SimulatorPort = GetSimulatorPort();
 				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
 
-				helper.TestLightPRSensorPower();
+				helper.TestLightCommand();
 			}
 		}
 
 		[Test]
-		public void Test_LightPRSensorPower_AlwaysOn_3SecondReadInterval()
+		public void Test_SetLightToOff()
 		{
-			using (var helper = new LightPRSensorPowerTestHelper())
+			using (var helper = new LightModeCommandTestHelper())
 			{
-				helper.ReadInterval = 3;
+				helper.LightCommand = LightMode.Off;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
@@ -36,16 +43,16 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 				helper.SimulatorPort = GetSimulatorPort();
 				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
 
-				helper.TestLightPRSensorPower();
+				helper.TestLightCommand();
 			}
 		}
 
 		[Test]
-		public void Test_LightPRSensorPower_OnAndOff_4SecondReadInterval()
+		public void Test_SetLightToAboveThreshold()
 		{
-			using (var helper = new LightPRSensorPowerTestHelper())
+			using (var helper = new LightModeCommandTestHelper())
 			{
-				helper.ReadInterval = 4;
+				helper.LightCommand = LightMode.AboveThreshold;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
@@ -53,15 +60,16 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 				helper.SimulatorPort = GetSimulatorPort();
 				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
 
-				helper.TestLightPRSensorPower();
+				helper.TestLightCommand();
 			}
 		}
+
 		[Test]
-		public void Test_LightPRSensorPower_OnAndOff_6SecondReadInterval()
+		public void Test_SetLightToBelowThreshold()
 		{
-			using (var helper = new LightPRSensorPowerTestHelper())
+			using (var helper = new LightModeCommandTestHelper())
 			{
-				helper.ReadInterval = 6;
+				helper.LightCommand = LightMode.BelowThreshold;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
@@ -69,7 +77,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 				helper.SimulatorPort = GetSimulatorPort();
 				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
 
-				helper.TestLightPRSensorPower();
+				helper.TestLightCommand();
 			}
 		}
 	}

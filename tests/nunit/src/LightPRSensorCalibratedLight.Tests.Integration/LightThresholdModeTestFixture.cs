@@ -11,16 +11,17 @@ using System.IO.Ports;
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
 	[TestFixture(Category = "Integration")]
-	public class CalibrationEEPROMTestFixture : BaseTestFixture
+	public class LightThresholdModeTestFixture : BaseTestFixture
 	{
 		[Test]
-		public void Test_CalibrateDarkEEPROM_10()
+		public void Test_LightAboveThreshold_LightNeeded()
 		{
-			using (var helper = new CalibrationEEPROMTestHelper())
+			using (var helper = new LightThresholdModeTestHelper())
 			{
-				helper.Label = "dark";
-				helper.Letter = "D";
-				helper.RawLightValue = 10;
+				helper.LightMode = LightMode.AboveThreshold;
+				helper.Threshold = 50;
+				helper.SimulatedLightPercentage = 55;
+				helper.LightIsExpected = true;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
@@ -28,18 +29,19 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 				helper.SimulatorPort = GetSimulatorPort();
 				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
 
-				helper.TestCalibrationEEPROM();
+				helper.TestLight();
 			}
 		}
 
 		[Test]
-		public void Test_CalibrateDarkEEPROM_200()
+		public void Test_LightAboveThreshold_LightNotNeeded()
 		{
-			using (var helper = new CalibrationEEPROMTestHelper())
+			using (var helper = new LightThresholdModeTestHelper())
 			{
-				helper.Label = "dark";
-				helper.Letter = "D";
-				helper.RawLightValue = 200;
+				helper.LightMode = LightMode.AboveThreshold;
+				helper.Threshold = 50;
+				helper.SimulatedLightPercentage = 40;
+				helper.LightIsExpected = false;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
@@ -47,18 +49,19 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 				helper.SimulatorPort = GetSimulatorPort();
 				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
 
-				helper.TestCalibrationEEPROM();
+				helper.TestLight();
 			}
 		}
 
 		[Test]
-		public void Test_CalibrateBrightEEPROM_950()
+		public void Test_LightBelowThreshold_LightNeeded()
 		{
-			using (var helper = new CalibrationEEPROMTestHelper())
+			using (var helper = new LightThresholdModeTestHelper())
 			{
-				helper.Label = "bright";
-				helper.Letter = "B";
-				helper.RawLightValue = 950;
+				helper.LightMode = LightMode.BelowThreshold;
+				helper.Threshold = 50;
+				helper.SimulatedLightPercentage = 40;
+				helper.LightIsExpected = true;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
@@ -66,18 +69,19 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 				helper.SimulatorPort = GetSimulatorPort();
 				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
 
-				helper.TestCalibrationEEPROM();
+				helper.TestLight();
 			}
 		}
 
 		[Test]
-		public void Test_CalibrateBrightEEPROM_1020()
+		public void Test_LightBelowThreshold_LightNotNeeded()
 		{
-			using (var helper = new CalibrationEEPROMTestHelper())
+			using (var helper = new LightThresholdModeTestHelper())
 			{
-				helper.Label = "bright";
-				helper.Letter = "B";
-				helper.RawLightValue = 1020;
+				helper.LightMode = LightMode.BelowThreshold;
+				helper.Threshold = 50;
+				helper.SimulatedLightPercentage = 60;
+				helper.LightIsExpected = false;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
@@ -85,7 +89,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 				helper.SimulatorPort = GetSimulatorPort();
 				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
 
-				helper.TestCalibrationEEPROM();
+				helper.TestLight();
 			}
 		}
 	}

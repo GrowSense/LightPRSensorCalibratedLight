@@ -16,6 +16,9 @@ void serialPrintLoopFooter();
 void EEPROMWriteLong(int address, long value);
 long EEPROMReadLong(int address);
 
+void setEEPROMFlag(int address);
+void removeEEPROMFlag(int address);
+
 long secondsToMilliseconds(int seconds);
 float millisecondsToSecondsWithDecimal(int milliseconds);
 

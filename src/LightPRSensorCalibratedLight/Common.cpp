@@ -65,6 +65,22 @@ long EEPROMReadLong(int address)
       return ((four << 0) & 0xFF) + ((three << 8) & 0xFFFF) + ((two << 16) & 0xFFFFFF) + ((one << 24) & 0xFFFFFFFF);
 }
 
+void setEEPROMFlag(int address)
+{
+  if (isDebugMode)
+  {
+    Serial.print("Setting EEPROM flag");
+  }
+
+  if (EEPROM.read(address) != 99)
+    EEPROM.write(address, 99);
+}
+
+void removeEEPROMFlag(int address)
+{
+  EEPROM.write(address, 0);
+}
+
 long secondsToMilliseconds(int seconds)
 {
   return seconds * 1000;

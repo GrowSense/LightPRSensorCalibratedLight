@@ -87,7 +87,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 			using (var helper = new CalibrateCommandTestHelper())
 			{
 				helper.Label = "bright";
-				helper.Letter = "W";
+				helper.Letter = "B";
 				helper.SimulatedLightPercentage = 80;
 
 				helper.DevicePort = GetDevicePort();
@@ -106,7 +106,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 			using (var helper = new CalibrateCommandTestHelper())
 			{
 				helper.Label = "bright";
-				helper.Letter = "W";
+				helper.Letter = "B";
 				helper.SimulatedLightPercentage = 90;
 
 				helper.DevicePort = GetDevicePort();
@@ -125,7 +125,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 			using (var helper = new CalibrateCommandTestHelper())
 			{
 				helper.Label = "bright";
-				helper.Letter = "W";
+				helper.Letter = "B";
 				helper.RawLightValue = 880;
 
 				helper.DevicePort = GetDevicePort();
@@ -144,7 +144,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 			using (var helper = new CalibrateCommandTestHelper())
 			{
 				helper.Label = "bright";
-				helper.Letter = "W";
+				helper.Letter = "B";
 				helper.RawLightValue = 900;
 
 				helper.DevicePort = GetDevicePort();

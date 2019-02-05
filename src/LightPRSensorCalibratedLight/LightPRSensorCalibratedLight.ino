@@ -39,11 +39,7 @@ void setupClock()
 {
     Rtc.Begin();
     
-    RtcDateTime now = Rtc.GetDateTime();
-
-    printDateTime(now);
-    Serial.println();
-    
+    // TODO: Remove if not needed
    /* 
     if (Rtc.GetIsWriteProtected())
     {
@@ -142,8 +138,8 @@ void checkCommand()
 
     switch (letter)
     {
-      case 'L':
-        setLightStatus(msg);
+      case 'M':
+        setLightMode(msg);
         break;
       case 'T':
         setThreshold(msg);
@@ -151,24 +147,36 @@ void checkCommand()
       case 'D':
         setDarkLightCalibrationValue(msg);
         break;
-      case 'W':
+      case 'B':
         setBrightLightCalibrationValue(msg);
         break;
-      case 'V':
+      case 'I':
         setLightPRSensorReadingInterval(msg);
         break;
       case 'X':
         restoreDefaultSettings();
         break;
-      case 'N':
+/*      case 'N': // TODO: Remove if not needed. The "M" command is used to turn the light on or off so this should be obsolete.
         Serial.println("Turning light on");
-        lightStatus = LIGHT_STATUS_ON;
+        lightMode = LIGHT_MODE_ON;
         lightOn();
         break;
       case 'F':
         Serial.println("Turning light off");
-        lightStatus = LIGHT_STATUS_OFF;
+        lightMode = LIGHT_MODE_OFF;
         lightOff();
+        break;*/
+      case 'E':
+        setLightStartHour(msg);
+        break;
+      case 'F':
+        setLightStartMinute(msg);
+        break;
+      case 'G':
+        setLightStopHour(msg);
+        break;
+      case 'H':
+        setLightStopMinute(msg);
         break;
       case 'Z':
         Serial.println("Toggling IsDebug");
@@ -305,41 +313,35 @@ void serialPrintData()
 
     if (serialMode == SERIAL_MODE_CSV)
     {
-      Serial.print("D;"); // This prefix indicates that the line contains data.
-      Serial.print("R:");
+      Serial.print("D;R:");
       Serial.print(lightLevelRaw);
-      Serial.print(";");
-      Serial.print("C:");
+      Serial.print(";L:");
       Serial.print(lightLevelCalibrated);
-      Serial.print(";");
-      Serial.print("T:");
+      Serial.print(";T:");
       Serial.print(threshold);
-      Serial.print(";");
-      Serial.print("L:");
-      Serial.print(lightStatus);
-      Serial.print(";");
-      Serial.print("I:");
+      Serial.print(";M:");
+      Serial.print(lightMode);
+      Serial.print(";I:");
       Serial.print(lightPRSensorReadingIntervalInSeconds);
-      Serial.print(";");
-      Serial.print("LN:"); // Water needed
-      Serial.print(lightLevelCalibrated < threshold);
-      Serial.print(";");
-      Serial.print("LO:"); // Light on
+      Serial.print(";LN:"); // Water needed
+      Serial.print(lightIsNeeded);
+      Serial.print(";LO:"); // Light on
       Serial.print(lightIsOn);
-      Serial.print(";");
-      //Serial.print("SSPO:"); // Seconds since light on
-      //Serial.print((millis() - lastLightFinishTime) / 1000);
-      //Serial.print(";");
-      Serial.print("D:"); // Dark calibration value
+      Serial.print(";D:"); // Dark calibration value
       Serial.print(darkLightCalibrationValue);
-      Serial.print(";");
-      Serial.print("B:"); // Bright calibration value
+      Serial.print(";B:"); // Bright calibration value
       Serial.print(brightLightCalibrationValue);
-      Serial.print(";");
-      Serial.print("Z:");
+      Serial.print(";Z:");
       Serial.print(VERSION);
-      Serial.print(";");
-      Serial.print("A:");
+      Serial.print(";E:");
+      Serial.print(startHour);
+      Serial.print(";F:");
+      Serial.print(startMinute);
+      Serial.print(";G:");
+      Serial.print(stopHour);
+      Serial.print(";H:");
+      Serial.print(stopMinute);
+      Serial.print(";C:");
       printDateTime(Rtc.GetDateTime());
       Serial.print(";;");
       Serial.println();
@@ -358,17 +360,17 @@ void serialPrintData()
       Serial.print("lightNeeded=");
       Serial.print(lightLevelCalibrated < threshold);
       Serial.print("&");
-      Serial.print("lightStatus=");
-      Serial.print(lightStatus);
+      Serial.print("lightMode=");
+      Serial.print(lightMode);
       Serial.print("&");
       Serial.print("readingInterval=");
       Serial.print(lightPRSensorReadingIntervalInSeconds);
       Serial.print("&");
-      Serial.print("lightBurstOnTime=");
-      Serial.print(lightBurstOnTime);
+      Serial.print("lightStartHour=");
+      Serial.print(lightStartHour);
       Serial.print("&");
-      Serial.print("lightBurstOffTime=");
-      Serial.print(lightBurstOffTime);
+      Serial.print("lightStartMinute=");
+      Serial.print(lightStartMinute);
       Serial.print("&");
       Serial.print("lightOn=");
       Serial.print(lightIsOn);

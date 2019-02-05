@@ -2,11 +2,11 @@
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-	public class GreenSenseIrrigatorHardwareTestHelper : GreenSenseHardwareTestHelper
+	public class GreenSenseIlluminatorHardwareTestHelper : GreenSenseHardwareTestHelper
 	{
 		public int SimulatorLightPin = 2;
 
-		public GreenSenseIrrigatorHardwareTestHelper()
+		public GreenSenseIlluminatorHardwareTestHelper()
 		{
 		}
 
@@ -14,22 +14,23 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 		{
 			base.PrepareDeviceForTest(false);
 
-			SetDeviceLightOffTime(0);
-
 			if (consoleWriteDeviceOutput)
 				ReadFromDeviceAndOutputToConsole();
 		}
 
-		public void SetDeviceLightOffTime(int lightOffTime)
+		public void SendClockCommand()
 		{
-			var cmd = "O" + lightOffTime;
-
-			Console.WriteLine("");
-			Console.WriteLine("Setting light off time to " + lightOffTime + " seconds...");
-			Console.WriteLine("  Sending '" + cmd + "' command to device");
-			Console.WriteLine("");
-
-			SendDeviceCommand(cmd);
+			SendClockCommand (DateTime.Now);
 		}
+
+		public void SendClockCommand(DateTime dateTime)
+		{
+			var cmd = "C" + dateTime.ToString ("dd/MM/yyyy HH:mm:ss");
+
+			WriteToDevice(cmd);
+
+			WaitForMessageReceived(cmd);
+		}
+
 	}
 }
