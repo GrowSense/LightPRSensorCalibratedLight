@@ -11,9 +11,6 @@ extern int lightPRSensorReadIntervalIsSetFlagAddress;
 extern int darkLightCalibrationValue;
 extern int brightLightCalibrationValue;
 
-extern bool lightPRSensorIsOn;
-extern long lastSensorOnTime;
-extern int delayAfterTurningSensorOn;
 extern bool lightPRSensorReadingHasBeenTaken;
 
 void setupLightPRSensor();
@@ -21,10 +18,6 @@ void setupLightPRSensor();
 void setupCalibrationValues();
 
 void setupLightPRSensorReadingInterval();
-
-void turnLightPRSensorOn();
-
-void turnLightPRSensorOff();
 
 void takeLightPRSensorReading();
 
@@ -40,7 +33,6 @@ void setLightPRSensorReadingInterval(long readInterval);
 long getLightPRSensorReadingInterval();
 
 void setEEPROMLightPRSensorReadingIntervalIsSetFlag();
-void removeEEPROMLightPRSensorReadingIntervalIsSetFlag();
 
 void setDarkLightCalibrationValue(char* msg);
 

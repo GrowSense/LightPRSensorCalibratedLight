@@ -1,26 +1,26 @@
 ﻿using System;
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-	public class LightCommandTestHelper : GreenSenseIrrigatorHardwareTestHelper
+	public class LightModeCommandTestHelper : GreenSenseIlluminatorHardwareTestHelper
 	{
-		public LightStatus LightCommand = LightStatus.Auto;
+		public LightMode LightCommand = LightMode.On;
 
 		public void TestLightCommand()
 		{
 			WriteTitleText("Starting light command test");
 
-			Console.WriteLine("Light command: " + LightCommand);
+			Console.WriteLine("Light mode command: " + LightCommand);
 			Console.WriteLine("");
 
 			ConnectDevices(false);
 
-			var cmd = "P" + (int)LightCommand;
+			var cmd = "M" + (int)LightCommand;
 
 			SendDeviceCommand(cmd);
 
 			var dataEntry = WaitForDataEntry();
 			dataEntry = WaitForDataEntry();
-			AssertDataValueEquals(dataEntry, "P", (int)LightCommand);
+			AssertDataValueEquals(dataEntry, "M", (int)LightCommand);
 		}
 	}
 }

@@ -18,12 +18,12 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 		{
 			WriteTitleText("Starting calibrate " + Label + " command test");
 
-			Console.WriteLine("Simulated soil moisture: " + SimulatedLightPercentage + "%");
+			Console.WriteLine("Simulated light: " + SimulatedLightPercentage + "%");
 
 			if (RawLightValue == 0)
 				RawLightValue = SimulatedLightPercentage * AnalogPinMaxValue / 100;
 
-			Console.WriteLine("Raw soil moisture value: " + RawLightValue);
+			Console.WriteLine("Raw light value: " + RawLightValue);
 			Console.WriteLine("");
 
 			var simulatorIsNeeded = SimulatedLightPercentage > -1;
@@ -52,9 +52,9 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
 			SendDeviceCommand(command);
 
-			var data = WaitForData(3); // Wait for 3 data entries to let the soil moisture simulator stabilise
+			var data = WaitForData(3); // Wait for 3 data entries to let the light simulator stabilise
 
-			// If using the soil moisture simulator then the value needs to be within a specified range
+			// If using the light simulator then the value needs to be within a specified range
 			if (SimulatorIsEnabled)
 				AssertDataValueIsWithinRange(data[data.Length - 1], Letter, RawLightValue, RawValueMarginOfError);
 			else // Otherwise it needs to be exact

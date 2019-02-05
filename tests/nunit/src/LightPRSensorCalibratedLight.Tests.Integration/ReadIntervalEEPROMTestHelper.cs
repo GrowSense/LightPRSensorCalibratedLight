@@ -2,7 +2,7 @@
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-	public class ReadIntervalEEPROMTestHelper : GreenSenseIrrigatorHardwareTestHelper
+	public class ReadIntervalEEPROMTestHelper : GreenSenseIlluminatorHardwareTestHelper
 	{
 		public int ReadInterval = 3;
 
@@ -23,12 +23,12 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
 			var dataEntry = WaitForDataEntry ();
 
-			AssertDataValueEquals(dataEntry, "V", ReadInterval);
+			AssertDataValueEquals(dataEntry, "I", ReadInterval);
 		}
 
 		public void SendReadIntervalCommand()
 		{
-			var command = "V" + ReadInterval;
+			var command = "I" + ReadInterval;
 
 			WriteParagraphTitleText("Sending read interval command...");
 
@@ -38,7 +38,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
 			WriteParagraphTitleText("Checking read interval value...");
 
-			AssertDataValueEquals(dataEntry, "V", ReadInterval);
+			AssertDataValueEquals(dataEntry, "I", ReadInterval);
 		}
 	}
 }

@@ -108,7 +108,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
 		public void SetDeviceReadInterval(int numberOfSeconds)
 		{
-			var cmd = "V" + numberOfSeconds;
+			var cmd = "I" + numberOfSeconds;
 
 			Console.WriteLine("");
 			Console.WriteLine("Setting device read interval to " + numberOfSeconds + " second(s)...");
@@ -135,7 +135,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 		public void SimulateLight(int lightPercentage)
 		{
 			Console.WriteLine("");
-			Console.WriteLine("Simulating soil moisture percentage");
+			Console.WriteLine("Simulating light percentage");
 			Console.WriteLine("  Sending analog percentage");
 			Console.WriteLine("    PWM pin: " + LightSimulatorPin);
 			Console.WriteLine("    Soil Moisture Percentage: " + lightPercentage + "%");
@@ -148,19 +148,19 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 		#region Wait for Pin Functions
 		public int WaitUntilLightPRSensorPowerPinIs(bool expectedValue)
 		{
-			return WaitUntilSimulatorPinIs("soil moisture sensor power", LightSimulatorPowerPin, expectedValue);
+			return WaitUntilSimulatorPinIs("light sensor power", LightSimulatorPowerPin, expectedValue);
 		}
 
 		public double WaitWhileLightPRSensorPowerPinIs(bool expectedValue)
 		{
-			return WaitWhileSimulatorPinIs("soil moisture sensor power", LightSimulatorPowerPin, expectedValue);
+			return WaitWhileSimulatorPinIs("light sensor power", LightSimulatorPowerPin, expectedValue);
 		}
 		#endregion
 
 		#region Assert Simulator Pin Functions
 		public void AssertLightPRSensorPowerPinForDuration(bool expectedValue, int durationInSeconds)
 		{
-			AssertSimulatorPinForDuration("soil moisture sensor power", LightSimulatorPowerPin, expectedValue, durationInSeconds);
+			AssertSimulatorPinForDuration("light sensor power", LightSimulatorPowerPin, expectedValue, durationInSeconds);
 		}
 		#endregion
 	}
