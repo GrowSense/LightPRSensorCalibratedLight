@@ -5,9 +5,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 {
 	public class LightTimerModeTestHelper : GreenSenseIlluminatorHardwareTestHelper
 	{
-		public LightMode LightMode = LightMode.Timer;
-		public int SimulatedLightPercentage = 60;
-		public int Timer = 50;
+		public LightMode Mode = LightMode.Timer;
+
 		public int DurationToCheckLight = 5;
 		public bool LightIsExpected = false;
 
@@ -22,49 +21,50 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 		{
 			WriteTitleText("Starting light timer mode test");
 
-			Console.WriteLine("Light command: " + LightMode);
-			Console.WriteLine("Simulated light: " + SimulatedLightPercentage + "%");
+			Console.WriteLine("Light mode: " + Mode);
 			Console.WriteLine("");
 
 			ConnectDevices();
 
-			var cmd = "M" + (int)LightMode;
+			var cmd = "M" + (int)Mode;
 
 			SendDeviceCommand(cmd);
 
-			//SendDeviceCommand("T" + Timer);
-
+			// Set the clock on the device
 			var deviceTime = DeviceTime.ToString ("dd/MM/yyyy HH:mm:ss");
 
 			Console.WriteLine ("Device time: " + deviceTime);
 
 			SendDeviceCommand("C" + deviceTime);
 
-			SendDeviceCommand("H" + deviceTime);
+			// Set the start and stop times for the light
+			SendDeviceCommand("E" + StartHour);
+			SendDeviceCommand("F" + StartMinute);
+			SendDeviceCommand("G" + StopHour);
+			SendDeviceCommand("H" + StopMinute);
 
-			/*SimulateLight(SimulatedLightPercentage);
+			// Skip a line of data in case it isn't up to date yet
+			WaitForData (1);
 
-			var data = WaitForData(3);
+			// Get the next line of data
+			var dataEntry = WaitForDataEntry();
 
-			CheckDataValues(data[data.Length - 1]);*/
+			CheckDataValues(dataEntry);
 		}
 
 		public void CheckDataValues(Dictionary<string, string> dataEntry)
 		{
-			AssertDataValueEquals(dataEntry, "M", (int)LightMode);
-			AssertDataValueEquals(dataEntry, "T", Timer);
+			AssertDataValueEquals(dataEntry, "M", (int)Mode);
 
 			// TODO: Check LO value matches the light
 
-			AssertDataValueIsWithinRange(dataEntry, "L", SimulatedLightPercentage, CalibratedValueMarginOfError);
-
-			switch (LightMode)
+			switch (Mode)
 			{
-			case LightMode.Timer:
-				CheckLightIsAccurate();
-				break;
-			default:
-				throw new Exception("Test does not support light mode: " + LightMode);
+				case LightMode.Timer:
+					CheckLightIsAccurate();
+					break;
+				default:
+					throw new Exception("Test does not support light mode: " + Mode);
 			}
 
 		}

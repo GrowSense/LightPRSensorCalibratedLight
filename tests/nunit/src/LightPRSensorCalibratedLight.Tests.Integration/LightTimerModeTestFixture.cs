@@ -14,13 +14,47 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 	public class LightTimerModeTestFixture : BaseTestFixture
 	{
 		[Test]
-		public void Test_LightTimer_LightNeeded()
+		public void Test_LightTimer_LightNotNeeded_JustBeforeTurningOn()
 		{
 			using (var helper = new LightTimerModeTestHelper())
 			{
-				helper.LightMode = LightMode.Timer;
-				helper.Timer = 50;
-				helper.SimulatedLightPercentage = 55;
+				helper.Mode = LightMode.Timer;
+
+				helper.DeviceTime = GetTime (6, 28);
+
+				helper.StartHour = 6;
+				helper.StartMinute = 30;
+
+				helper.StopHour = 18;
+				helper.StopMinute = 30;
+
+				helper.LightIsExpected = false;
+
+				helper.DevicePort = GetDevicePort();
+				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
+
+				helper.SimulatorPort = GetSimulatorPort();
+				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
+
+				helper.TestLight();
+			}
+		}
+
+		[Test]
+		public void Test_LightTimer_LightNeeded_JustTurnedOn()
+		{
+			using (var helper = new LightTimerModeTestHelper())
+			{
+				helper.Mode = LightMode.Timer;
+
+				helper.DeviceTime = GetTime (6, 31);
+
+				helper.StartHour = 6;
+				helper.StartMinute = 30;
+
+				helper.StopHour = 18;
+				helper.StopMinute = 30;
+
 				helper.LightIsExpected = true;
 
 				helper.DevicePort = GetDevicePort();
@@ -34,13 +68,47 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 		}
 
 		[Test]
-		public void Test_LightTimer_LightNotNeeded()
+		public void Test_LightTimer_LightNeeded_JustBeforeTurningOff()
 		{
 			using (var helper = new LightTimerModeTestHelper())
 			{
-				helper.LightMode = LightMode.Timer;
-				helper.Timer = 50;
-				helper.SimulatedLightPercentage = 45;
+				helper.Mode = LightMode.Timer;
+
+				helper.DeviceTime = GetTime (18, 29);
+
+				helper.StartHour = 6;
+				helper.StartMinute = 30;
+
+				helper.StopHour = 18;
+				helper.StopMinute = 30;
+
+				helper.LightIsExpected = true;
+
+				helper.DevicePort = GetDevicePort();
+				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
+
+				helper.SimulatorPort = GetSimulatorPort();
+				helper.SimulatorBaudRate = GetSimulatorSerialBaudRate();
+
+				helper.TestLight();
+			}
+		}
+
+		[Test]
+		public void Test_LightTimer_LightNotNeeded_JustTurnedOff()
+		{
+			using (var helper = new LightTimerModeTestHelper())
+			{
+				helper.Mode = LightMode.Timer;
+
+				helper.DeviceTime = GetTime (18, 31);
+
+				helper.StartHour = 6;
+				helper.StartMinute = 30;
+
+				helper.StopHour = 18;
+				helper.StopMinute = 30;
+
 				helper.LightIsExpected = false;
 
 				helper.DevicePort = GetDevicePort();
@@ -51,6 +119,14 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
 				helper.TestLight();
 			}
+		}
+
+		public DateTime GetTime(int hour, int minute)
+		{
+			var now = DateTime.Now;
+			var customTime = new DateTime (now.Year, now.Month, now.Day, hour, minute, 0);
+
+			return customTime;
 		}
 	}
 }

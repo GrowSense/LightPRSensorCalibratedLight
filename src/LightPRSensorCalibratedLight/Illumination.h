@@ -84,5 +84,7 @@ void restoreDefaultThreshold();
 void restoreDefaultIlluminationSettings();
 void restoreDefaultLightStartHour();
 void restoreDefaultLightStartMinute();
+
+bool isNowAfterTime(int timeHour, int timeMinute, RtcDS1302<ThreeWire> rtc);
 #endif
 /* IRRIGATION_H_ */

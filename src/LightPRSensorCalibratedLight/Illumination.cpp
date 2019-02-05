@@ -207,51 +207,88 @@ void illuminateByPWMIfNeeded()
 
 void illuminateByTimerIfNeeded(RtcDS1302<ThreeWire> rtc)
 {
- // Serial.println("Controlling illumination by timer");
+
+  /*if (isDebugMode)
+  {
+  Serial.println("Controlling illumination by timer");
+  }*/
 
   RtcDateTime now = rtc.GetDateTime();
-      
-  bool isAfterStartTime = now.Hour() >= startHour
-    && now.Hour() >= startHour;
     
+  bool isAfterStartTime = isNowAfterTime(startHour, startMinute, rtc);
+     
+  bool isBeforeStopTime = !isNowAfterTime(stopHour, stopMinute, rtc); 
+  
   /*if (isDebugMode)
   {
     Serial.print("Is after start time: ");
     Serial.println(isAfterStartTime);
-  }*/
     
-  bool isBeforeStopTime = false;
-  bool isBeforeStopHour = now.Hour() < stopHour;
-  
-  /*if (isDebugMode)
-  {
-    Serial.print("Is before stop hour: ");
-    Serial.println(isBeforeStopHour);
-  }*/
-    
-  if (isBeforeStopHour)
-    isBeforeStopTime = true;
-  else
-  {
-    bool isStopHour = now.Hour() == stopHour;
-    
-    /*if (isDebugMode)
-    {
-      Serial.print("Is stop hour: ");
-      Serial.println(isStopHour);
-    }*/
-    isBeforeStopTime = isStopHour && now.Hour() < stopHour;
-  }
-    
-  /*if (isDebugMode)
-  {
     Serial.print("Is before stop time: ");
     Serial.println(isBeforeStopTime);
   }*/
  
-  bool lightExpected = isAfterStartTime && isBeforeStopTime;
+  lightIsNeeded = isAfterStartTime && isBeforeStopTime;
+    
+  /*if (isDebugMode)
+  {
+    Serial.print("Setting light pin: ");
+    Serial.println(lightIsNeeded);
+  }*/
   
-  digitalWrite(LIGHT_PIN, lightExpected);
+  if (lightIsNeeded)
+    lightOn();
+  else
+    lightOff();
+}
+
+bool isNowAfterTime(int timeHour, int timeMinute, RtcDS1302<ThreeWire> rtc)
+{
+  RtcDateTime now = rtc.GetDateTime();
+  
+  bool isAfterTime = false;
+  bool isAfterHour = now.Hour() > timeHour;
+  bool isHour = now.Hour() == timeHour;
+  
+  /*if (isDebugMode)
+  {
+    Serial.println("Checking whether 'now' is after the specified time:");
+    
+    Serial.print("Current hour (now): ");
+    Serial.println(now.Hour());
+    
+    Serial.print("Current minute (now): ");
+    Serial.println(now.Minute());
+    
+    Serial.print("Target minute: ");
+    Serial.println(timeMinute);
+    
+    Serial.print("Target hour: ");
+    Serial.println(timeHour);
+    
+    Serial.print("Target minute: ");
+    Serial.println(timeMinute);
+    
+    Serial.print("Is after hour: ");
+    Serial.println(isAfterHour);
+  
+    Serial.print("Is hour: ");
+    Serial.println(isHour);
+  }*/
+    
+  if (isHour)
+    isAfterTime = now.Minute() >= timeMinute;
+  else if (isAfterHour)
+    isAfterTime = true;
+    
+  /*if (isDebugMode)
+  {
+    Serial.print("Now is after target time: ");
+    Serial.println(isAfterTime);
+  }*/
+ 
+  return isAfterTime;
+    
 }
 
 void lightOn()
@@ -349,11 +386,11 @@ int getThreshold()
   {
     int threshold = value;
 
-    if (isDebugMode)
+    /*if (isDebugMode)
     {
       Serial.print("Threshold found in EEPROM: ");
       Serial.println(threshold);
-    }
+    }*/
 
     return threshold;
   }
@@ -379,11 +416,11 @@ void setLightStartHour(int newStartHour)
 {
   startHour = newStartHour;
 
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("Setting start hour to EEPROM: ");
     Serial.println(startHour);
-  }
+  }*/
 
   EEPROM.write(lightStartHourEEPROMAddress, newStartHour);
   
@@ -401,11 +438,11 @@ int getLightStartHour()
   {
     int startHour = value;
 
-    if (isDebugMode)
+    /*if (isDebugMode)
     {
       Serial.print("Start hour found in EEPROM: ");
       Serial.println(startHour);
-    }
+    }*/
 
     return startHour;
   }
@@ -452,11 +489,11 @@ int getLightStartMinute()
   {
     int startMinute = value;
 
-    if (isDebugMode)
+    /*if (isDebugMode)
     {
       Serial.print("Start minute found in EEPROM: ");
       Serial.println(startMinute);
-    }
+    }*/
 
     return startMinute;
   }
@@ -481,11 +518,11 @@ void setLightStopHour(int newStopHour)
 {
   stopHour = newStopHour;
 
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("Setting stop hour to EEPROM: ");
     Serial.println(stopHour);
-  }
+  }*/
 
   EEPROM.write(lightStopHourEEPROMAddress, newStopHour);
   
@@ -503,11 +540,11 @@ int getLightStopHour()
   {
     int stopHour = value;
 
-    if (isDebugMode)
+    /*if (isDebugMode)
     {
       Serial.print("Stop hour found in EEPROM: ");
       Serial.println(stopHour);
-    }
+    }*/
 
     return stopHour;
   }
@@ -532,11 +569,11 @@ void setLightStopMinute(int newStopMinute)
 {
   stopMinute = newStopMinute;
 
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("Setting light stop minute to EEPROM: ");
     Serial.println(stopMinute);
-  }
+  }*/
 
   EEPROM.write(lightStopMinuteEEPROMAddress, newStopMinute);
   
@@ -554,11 +591,11 @@ int getLightStopMinute()
   {
     int stopMinute = value;
 
-    if (isDebugMode)
+    /*if (isDebugMode)
     {
       Serial.print("Stop minute found in EEPROM: ");
       Serial.println(stopMinute);
-    }
+    }*/
 
     return stopMinute;
   }
