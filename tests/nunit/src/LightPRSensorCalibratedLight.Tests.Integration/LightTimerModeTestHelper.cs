@@ -49,10 +49,10 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 			// Get the next line of data
 			var dataEntry = WaitForDataEntry();
 
-			CheckDataValues(dataEntry);
+			CheckResults(dataEntry);
 		}
 
-		public void CheckDataValues(Dictionary<string, string> dataEntry)
+		public void CheckResults(Dictionary<string, string> dataEntry)
 		{
 			AssertDataValueEquals(dataEntry, "M", (int)Mode);
 
@@ -61,10 +61,10 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 			switch (Mode)
 			{
 				case LightMode.Timer:
-					CheckLightIsAccurate();
+					CheckLight();
 					break;
 				default:
-					throw new Exception("Test does not support light mode: " + Mode);
+					throw new Exception("Timer test does not support light mode: " + Mode);
 			}
 
 		}
@@ -79,7 +79,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 			AssertSimulatorPinForDuration("light", SimulatorLightPin, true, DurationToCheckLight);
 		}
 
-		public void CheckLightIsAccurate()
+		public void CheckLight()
 		{
 			if (LightIsExpected)
 			{
