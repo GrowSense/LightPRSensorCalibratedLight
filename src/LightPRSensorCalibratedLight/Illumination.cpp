@@ -293,22 +293,30 @@ bool isNowAfterTime(int timeHour, int timeMinute, RtcDS1302<ThreeWire> rtc)
 
 void lightOn()
 {
-  Serial.println("Turning light on");
+  if (!lightIsOn)
+  {
+    if (isDebugMode)
+      Serial.println("Turning light on");
 
-  digitalWrite(LIGHT_PIN, HIGH);
-  lightIsOn = true;
+    digitalWrite(LIGHT_PIN, HIGH);
+    lightIsOn = true;
 
-  lightStartTime = millis();
+    lightStartTime = millis();
+  }
 }
 
 void lightOff()
 {
-  Serial.println("Turning light off");
-  
-  digitalWrite(LIGHT_PIN, LOW);
-  lightIsOn = false;
+  if (lightIsOn)
+  {
+    if (isDebugMode)
+      Serial.println("Turning light off");
+    
+    digitalWrite(LIGHT_PIN, LOW);
+    lightIsOn = false;
 
-  lastLightFinishTime = millis();
+    lastLightFinishTime = millis();
+  }
 }
 
 void setLightMode(char* msg)
