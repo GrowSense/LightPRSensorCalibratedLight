@@ -39,8 +39,12 @@ void setupClock()
 {
     Rtc.Begin();
     
+    Serial.println("Date:");
+    Serial.println(__DATE__);
+    Serial.println("Time:");
+    Serial.println(__TIME__);
     // TODO: Remove if not needed
-   /* 
+    
     if (Rtc.GetIsWriteProtected())
     {
         Serial.println("RTC was write protected, enabling writing now");
@@ -54,6 +58,7 @@ void setupClock()
     }
 
     RtcDateTime now = Rtc.GetDateTime();
+    RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
     if (now < compiled) 
     {
         Serial.println("RTC is older than compile time!  (Updating DateTime)");
@@ -66,7 +71,7 @@ void setupClock()
     else if (now == compiled) 
     {
         Serial.println("RTC is the same as compile time! (not expected but all is fine)");
-    }*/
+    }
 }
 
 void loop()
@@ -156,16 +161,6 @@ void checkCommand()
       case 'X':
         restoreDefaultSettings();
         break;
-/*      case 'N': // TODO: Remove if not needed. The "M" command is used to turn the light on or off so this should be obsolete.
-        Serial.println("Turning light on");
-        lightMode = LIGHT_MODE_ON;
-        lightOn();
-        break;
-      case 'F':
-        Serial.println("Turning light off");
-        lightMode = LIGHT_MODE_OFF;
-        lightOff();
-        break;*/
       case 'E':
         setLightStartHour(msg);
         break;
@@ -205,70 +200,70 @@ void setClock(char* msg)
       spacePosition = i;
   }
   
-  if (isDebugMode)
-  {
+  //if (isDebugMode)
+  //{
     Serial.print("  Space position: ");
     Serial.println(spacePosition);
-  }
+  //}
   
   int startPosition = 1;
 
   int dateLength = 10;
 
-  if (isDebugMode)
-  {
+  //if (isDebugMode)
+  //{
     Serial.print("  Date length: ");
     Serial.println(dateLength);
     Serial.print("  Start position: ");
     Serial.println(startPosition);
-  }
+  //}
 
   char dateValue[11];
   readCharArray(msg, dateValue, startPosition, dateLength);
   
-  if (isDebugMode)
-  {
+  //if (isDebugMode)
+  //{
     Serial.print("  Date: ");
     Serial.println(dateValue);
-  }
+  //}
     
   int timeStartPosition = startPosition+dateLength+1;
   
-  if (isDebugMode)
-  {
+  //if (isDebugMode)
+  //{
     Serial.print("  Time start position: ");
     Serial.println(timeStartPosition);
-  }
+ // }
     
   int timeLength = 8;
   
-  if (isDebugMode)
-  {
+  //if (isDebugMode)
+  //{
     Serial.print("  Time length: ");
     Serial.println(timeLength);
-  }
+  //}
   
   char timeValue[9];
   readCharArray(msg, timeValue, timeStartPosition, timeLength);
   
-  if (isDebugMode)
-  {
+  //if (isDebugMode)
+  //{
     Serial.print("  Date: '");
     Serial.print(dateValue);
     Serial.println("'");
     Serial.print("  Time: '");
     Serial.print(timeValue);
     Serial.println("'");
-  }
+  //}
   
   Rtc.SetDateTime(RtcDateTime(dateValue, timeValue));
   
-  if (isDebugMode)
-  {
+  //if (isDebugMode)
+  //{
     Serial.println("RTC time from module");
     RtcDateTime now = Rtc.GetDateTime();
     printDateTime(now);
-  }
+  //}
 }
 
 void readCharArray(char msg[MAX_MSG_LENGTH], char buffer[MAX_MSG_LENGTH], int startPosition, int valueLength)
