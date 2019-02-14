@@ -205,8 +205,11 @@ void setClock(char* msg)
       spacePosition = i;
   }
   
+  if (isDebugMode)
+  {
     Serial.print("  Space position: ");
     Serial.println(spacePosition);
+  }
   
   int startPosition = 1;
 
