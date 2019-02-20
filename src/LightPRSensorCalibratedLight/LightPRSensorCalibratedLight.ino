@@ -23,9 +23,9 @@ void setup()
 {
   Serial.begin(9600);
 
-  setupClock();
-
   Serial.println("Starting light controller");
+  
+  setupClock();
 
   setupLightPRSensor();
 
@@ -39,21 +39,27 @@ void setupClock()
 {
     Rtc.Begin();
     
-    Serial.println("Date:");
-    Serial.println(__DATE__);
-    Serial.println("Time:");
-    Serial.println(__TIME__);
-    // TODO: Remove if not needed
+    if (isDebugMode)
+    {
+      Serial.println("Compile Date:");
+      Serial.println(__DATE__);
+      Serial.println(" Compile Time:");
+      Serial.println(__TIME__);
+    }
     
     if (Rtc.GetIsWriteProtected())
     {
-        Serial.println("RTC was write protected, enabling writing now");
+        if (isDebugMode)
+          Serial.println("RTC was write protected, enabling writing now");
+          
         Rtc.SetIsWriteProtected(false);
     }
 
     if (!Rtc.GetIsRunning())
     {
-        Serial.println("RTC was not actively running, starting now");
+        if (isDebugMode)
+          Serial.println("RTC was not actively running, starting now");
+          
         Rtc.SetIsRunning(true);
     }
 
@@ -61,16 +67,10 @@ void setupClock()
     RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
     if (now < compiled) 
     {
-        Serial.println("RTC is older than compile time!  (Updating DateTime)");
+        if (isDebugMode)
+          Serial.println("RTC is older than compile time!  (Updating DateTime)");
+          
         Rtc.SetDateTime(compiled);
-    }
-    else if (now > compiled) 
-    {
-        Serial.println("RTC is newer than compile time. (this is expected)");
-    }
-    else if (now == compiled) 
-    {
-        Serial.println("RTC is the same as compile time! (not expected but all is fine)");
     }
 }
 

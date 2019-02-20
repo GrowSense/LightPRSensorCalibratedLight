@@ -131,7 +131,15 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
 			SimulatorIsEnabled = true;
 
+			EnsureSimulatorIsNotResettingDevice ();
+
 			Console.WriteLine("");
+		}
+
+		public void EnsureSimulatorIsNotResettingDevice()
+		{
+			// Set the reset trigger pin to INPUT_PULLUP mode to avoid resetting the device
+			SimulatorClient.PinMode (ResetTriggerPin, PinMode.INPUT_PULLUP);
 		}
 
 		public void DisconnectDevice()
@@ -181,9 +189,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 			// Give the pin some time at LOW to ensure reset
 			Thread.Sleep (10);
 
-			// Change the reset trigger pin to an input to go back to normal
-			// TODO: Implement a cleaner way to do this
-			SimulatorClient.DigitalRead (ResetTriggerPin);
+			// Change the reset trigger pin to an INPUT_PULLUP to let the device go back to normal
+			SimulatorClient.PinMode (ResetTriggerPin, PinMode.INPUT_PULLUP);
 
 			// Re-open the connection to the device
 			ConnectDevice ();
