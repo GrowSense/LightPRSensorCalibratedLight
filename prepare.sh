@@ -2,7 +2,7 @@
 
 # Note: You may need to run this script with sudo
 
-echo "Preparing for LightPRSensorCalibratedSerial project"
+echo "Preparing for project"
 
 DIR=$PWD
 

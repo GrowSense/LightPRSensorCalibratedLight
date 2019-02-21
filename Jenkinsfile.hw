@@ -41,7 +41,7 @@ pipeline {
         stage('Build') {
             when { expression { !shouldSkipBuild() } }
             steps {
-                sh 'sh build-uno.sh'
+                sh 'sh build-tests.sh'
             }
         }
         stage('Upload') {
