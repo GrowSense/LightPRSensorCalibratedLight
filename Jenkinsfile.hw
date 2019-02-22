@@ -47,7 +47,7 @@ pipeline {
         stage('Upload') {
             when { expression { !shouldSkipBuild() } }
             steps {
-                sh 'sh upload-uno.sh'
+                sh 'sh upload-uno.sh ${ILLUMINATOR_PORT}'
             }
         }
         stage('Upload simulator') {
