@@ -1,167 +1,179 @@
 using System;
 using System.Threading;
 using NUnit.Framework;
+
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-	public class GreenSenseHardwareTestHelper : HardwareTestHelper
-	{
-		public int LightSimulatorPin = 9;
-		public int LightSimulatorPowerPin = 3;
+    public class GreenSenseHardwareTestHelper : HardwareTestHelper
+    {
+        public int LightSimulatorPin = 9;
+        public int LightSimulatorPowerPin = 3;
 
-		public int DelayAfterTurningLightPRSensorOn = 3;
+        public int DelayAfterTurningLightPRSensorOn = 3;
 
-		public int RawValueMarginOfError = 25;
-		public int CalibratedValueMarginOfError = 3;
-		public double TimeErrorMargin = 0.3;
+        public int RawValueMarginOfError = 25;
+        public int CalibratedValueMarginOfError = 3;
+        public double TimeErrorMargin = 0.3;
 
-		public bool CalibrationIsReversedByDefault = true;
+        public bool CalibrationIsReversedByDefault = true;
 
-		public GreenSenseHardwareTestHelper()
-		{
-		}
+        public GreenSenseHardwareTestHelper ()
+        {
+        }
 
-		#region Enable Devices Functions
-		public override void ConnectDevices(bool enableSimulator)
-		{
-			base.ConnectDevices(enableSimulator);
+        #region Enable Devices Functions
 
-			PrepareDeviceForTest();
-		}
-		#endregion
+        public override void ConnectDevices (bool enableSimulator)
+        {
+            base.ConnectDevices (enableSimulator);
 
-		#region Prepare Device Functions
-		public virtual void PrepareDeviceForTest()
-		{
-			PrepareDeviceForTest(true);
-		}
+            PrepareDeviceForTest ();
+        }
 
-		public virtual void PrepareDeviceForTest(bool consoleWriteDeviceOutput)
-		{
-			ResetDeviceSettings();
+        #endregion
 
-			SetDeviceReadInterval(1);
+        #region Prepare Device Functions
 
-			if (CalibrationIsReversedByDefault)
-				ReverseDeviceCalibration();
+        public virtual void PrepareDeviceForTest ()
+        {
+            PrepareDeviceForTest (true);
+        }
 
-			if (consoleWriteDeviceOutput)
-				ReadFromDeviceAndOutputToConsole();
-		}
-		#endregion
+        public virtual void PrepareDeviceForTest (bool consoleWriteDeviceOutput)
+        {
+            ResetDeviceSettings ();
 
-		#region General Device Command Settings
-		public void SendDeviceCommand(string command)
-		{
-			WriteToDevice(command);
+            SetDeviceReadInterval (1);
 
-			WaitForMessageReceived(command);
-		}
+            if (CalibrationIsReversedByDefault)
+                ReverseDeviceCalibration ();
 
-		public void WaitForMessageReceived(string message)
-		{
-			Console.WriteLine("");
-			Console.WriteLine("Waiting for received message");
-			Console.WriteLine("  Message: " + message);
+            if (consoleWriteDeviceOutput)
+                ReadFromDeviceAndOutputToConsole ();
+        }
 
-			var output = String.Empty;
-			var wasMessageReceived = false;
+        #endregion
 
-			var startTime = DateTime.Now;
+        #region General Device Command Settings
 
-			while (!wasMessageReceived)
-			{
-				output += ReadLineFromDevice();
+        public void SendDeviceCommand (string command)
+        {
+            WriteToDevice (command);
 
-				var expectedText = "Received message: " + message;
-				if (output.Contains(expectedText))
-				{
-					wasMessageReceived = true;
+            WaitForMessageReceived (command);
+        }
 
-					Console.WriteLine("  Message was received");
+        public void WaitForMessageReceived (string message)
+        {
+            Console.WriteLine ("");
+            Console.WriteLine ("Waiting for received message");
+            Console.WriteLine ("  Message: " + message);
 
-					ConsoleWriteSerialOutput(output);
-				}
+            var output = String.Empty;
+            var wasMessageReceived = false;
 
-				var hasTimedOut = DateTime.Now.Subtract(startTime).TotalSeconds > TimeoutWaitingForResponse;
-				if (hasTimedOut && !wasMessageReceived)
-				{
-					ConsoleWriteSerialOutput(output);
+            var startTime = DateTime.Now;
 
-					Assert.Fail("Timed out waiting for message received (" + TimeoutWaitingForResponse + " seconds)");
-				}
-			}
-		}
-		#endregion
+            while (!wasMessageReceived) {
+                output += ReadLineFromDevice ();
 
-		#region Specific Device Command Functions
-		public void ResetDeviceSettings()
-		{
-			var cmd = "X";
+                var expectedText = "Received message: " + message;
+                if (output.Contains (expectedText)) {
+                    wasMessageReceived = true;
 
-			Console.WriteLine("");
-			Console.WriteLine("Resetting device default settings...");
-			Console.WriteLine("  Sending '" + cmd + "' command to device");
-			Console.WriteLine("");
+                    Console.WriteLine ("  Message was received");
 
-			SendDeviceCommand(cmd);
-		}
+                    ConsoleWriteSerialOutput (output);
+                }
 
-		public void SetDeviceReadInterval(int numberOfSeconds)
-		{
-			var cmd = "I" + numberOfSeconds;
+                var hasTimedOut = DateTime.Now.Subtract (startTime).TotalSeconds > TimeoutWaitingForResponse;
+                if (hasTimedOut && !wasMessageReceived) {
+                    ConsoleWriteSerialOutput (output);
 
-			Console.WriteLine("");
-			Console.WriteLine("Setting device read interval to " + numberOfSeconds + " second(s)...");
-			Console.WriteLine("  Sending '" + cmd + "' command to device");
-			Console.WriteLine("");
+                    Assert.Fail ("Timed out waiting for message received (" + TimeoutWaitingForResponse + " seconds)");
+                }
+            }
+        }
 
-			SendDeviceCommand(cmd);
-		}
+        #endregion
 
-		public void ReverseDeviceCalibration()
-		{
-			var cmd = "R";
+        #region Specific Device Command Functions
 
-			Console.WriteLine("");
-			Console.WriteLine("Reversing device calibration settings...");
-			Console.WriteLine("  Sending '" + cmd + "' command to device");
-			Console.WriteLine("");
+        public void ResetDeviceSettings ()
+        {
+            var cmd = "X";
 
-			SendDeviceCommand(cmd);
-		}
-		#endregion
+            Console.WriteLine ("");
+            Console.WriteLine ("Resetting device default settings...");
+            Console.WriteLine ("  Sending '" + cmd + "' command to device");
+            Console.WriteLine ("");
 
-		#region Soil Moisture Simulator Functions
-		public void SimulateLight(int lightPercentage)
-		{
-			Console.WriteLine("");
-			Console.WriteLine("Simulating light percentage");
-			Console.WriteLine("  Sending analog percentage");
-			Console.WriteLine("    PWM pin: " + LightSimulatorPin);
-			Console.WriteLine("    Soil Moisture Percentage: " + lightPercentage + "%");
-			Console.WriteLine("");
+            SendDeviceCommand (cmd);
+        }
 
-			SimulatorClient.AnalogWritePercentage(LightSimulatorPin, lightPercentage);
-		}
-		#endregion
+        public void SetDeviceReadInterval (int numberOfSeconds)
+        {
+            var cmd = "I" + numberOfSeconds;
 
-		#region Wait for Pin Functions
-		public int WaitUntilLightPRSensorPowerPinIs(bool expectedValue)
-		{
-			return WaitUntilSimulatorPinIs("light sensor power", LightSimulatorPowerPin, expectedValue);
-		}
+            Console.WriteLine ("");
+            Console.WriteLine ("Setting device read interval to " + numberOfSeconds + " second(s)...");
+            Console.WriteLine ("  Sending '" + cmd + "' command to device");
+            Console.WriteLine ("");
 
-		public double WaitWhileLightPRSensorPowerPinIs(bool expectedValue)
-		{
-			return WaitWhileSimulatorPinIs("light sensor power", LightSimulatorPowerPin, expectedValue);
-		}
-		#endregion
+            SendDeviceCommand (cmd);
+        }
 
-		#region Assert Simulator Pin Functions
-		public void AssertLightPRSensorPowerPinForDuration(bool expectedValue, int durationInSeconds)
-		{
-			AssertSimulatorPinForDuration("light sensor power", LightSimulatorPowerPin, expectedValue, durationInSeconds);
-		}
-		#endregion
-	}
+        public void ReverseDeviceCalibration ()
+        {
+            var cmd = "R";
+
+            Console.WriteLine ("");
+            Console.WriteLine ("Reversing device calibration settings...");
+            Console.WriteLine ("  Sending '" + cmd + "' command to device");
+            Console.WriteLine ("");
+
+            SendDeviceCommand (cmd);
+        }
+
+        #endregion
+
+        #region Light Simulator Functions
+
+        public void SimulateLight (int lightPercentage)
+        {
+            Console.WriteLine ("");
+            Console.WriteLine ("Simulating light percentage");
+            Console.WriteLine ("  Sending analog percentage");
+            Console.WriteLine ("    PWM pin: " + LightSimulatorPin);
+            Console.WriteLine ("    Light Percentage: " + lightPercentage + "%");
+            Console.WriteLine ("");
+
+            SimulatorClient.AnalogWritePercentage (LightSimulatorPin, lightPercentage);
+        }
+
+        #endregion
+
+        #region Wait for Pin Functions
+
+        public int WaitUntilLightPRSensorPowerPinIs (bool expectedValue)
+        {
+            return WaitUntilSimulatorPinIs ("light sensor power", LightSimulatorPowerPin, expectedValue);
+        }
+
+        public double WaitWhileLightPRSensorPowerPinIs (bool expectedValue)
+        {
+            return WaitWhileSimulatorPinIs ("light sensor power", LightSimulatorPowerPin, expectedValue);
+        }
+
+        #endregion
+
+        #region Assert Simulator Pin Functions
+
+        public void AssertLightPRSensorPowerPinForDuration (bool expectedValue, int durationInSeconds)
+        {
+            AssertSimulatorPinForDuration ("light sensor power", LightSimulatorPowerPin, expectedValue, durationInSeconds);
+        }
+
+        #endregion
+    }
 }
