@@ -28,7 +28,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
         public string DataPrefix = "D;";
         public string DataPostFix = ";;";
 
-        public int TimeoutWaitingForResponse = 20;
+        public int TimeoutWaitingForResponse = 20 * 1000;
 
         public int AnalogPinMaxValue = 1023;
 
