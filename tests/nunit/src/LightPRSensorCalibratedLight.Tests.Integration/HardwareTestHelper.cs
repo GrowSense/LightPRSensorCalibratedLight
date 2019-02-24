@@ -523,7 +523,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             Console.WriteLine ("  Min allowable value: " + minAllowableValue);
 
             var isWithinRange = actualValue <= maxAllowableValue &&
-                       actualValue >= minAllowableValue;
+                                actualValue >= minAllowableValue;
 
             Console.WriteLine ("Is within range: " + isWithinRange);
 
@@ -533,6 +533,23 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
         #endregion
 
         #region Simulator Pin Assert Functions
+
+        public void AssertSimulatorPin (string label, int simulatorDigitalPin, bool expectedValue)
+        {
+            Console.WriteLine ("Checking light " + label + " pin for specified duration...");
+            Console.WriteLine ("  Expected value: " + expectedValue);
+
+            bool powerPinValue = SimulatorDigitalRead (simulatorDigitalPin);
+
+            if (expectedValue)
+                Assert.AreEqual (true, powerPinValue, "The " + label + " pin is off when it should be on.");
+            else
+                Assert.AreEqual (false, powerPinValue, "The " + label + " pin is on when it should be off.");
+
+            Console.WriteLine ("");
+            Console.WriteLine ("The " + label + " pin works as expected.");
+            Console.WriteLine ("");
+        }
 
         public void AssertSimulatorPinForDuration (string label, int simulatorDigitalPin, bool expectedValue, int durationInSeconds)
         {
