@@ -3,6 +3,10 @@ if ! type "python" > /dev/null; then
   sudo apt-get install -y python python-pip
 fi
 
+if [ -d "~/.platformio" ]; then
+  sudo rm ~/.platformio
+fi
+
 # platform.io
 if ! type "pio" > /dev/null; then
   python -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/develop/scripts/get-platformio.py)"

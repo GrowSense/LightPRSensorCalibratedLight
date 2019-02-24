@@ -23,7 +23,7 @@ void setup()
 {
   Serial.begin(9600);
 
-  Serial.println("Starting light controller");
+  serialWriteTitle();
   
   setupClock();
 
@@ -33,6 +33,11 @@ void setup()
 
   serialOutputIntervalInSeconds = lightPRSensorReadingIntervalInSeconds;
 
+}
+
+void serialWriteTitle()
+{
+  Serial.println("Light controller");
 }
 
 void setupClock()
@@ -183,6 +188,9 @@ void checkCommand()
         break;
       case 'R':
         reverseLightCalibrationValues();
+        break;
+      case '#':
+        serialWriteTitle();
         break;
     }
     forceSerialOutput();
