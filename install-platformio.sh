@@ -5,7 +5,7 @@ fi
 
 # platform.io
 if ! type "pio" > /dev/null; then
-  sudo python -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/develop/scripts/get-platformio.py)"
+  python -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/develop/scripts/get-platformio.py)"
 fi
 
-sudo platformio upgrade
+platformio upgrade
