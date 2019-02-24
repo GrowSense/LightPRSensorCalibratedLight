@@ -23,6 +23,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
         public int SimulatorBaudRate = 0;
 
         public int DelayAfterConnectingToHardware = 500;
+        public int DelayAfterDisconnectingFromHardware = 500;
 
         public string DataPrefix = "D;";
         public string DataPostFix = ";;";
@@ -39,6 +40,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
         public int ResetTriggerPin = 4;
 
         public string IlluminatorStartText = "Light controller";
+
+        public TimeoutHelper Timeout = new TimeoutHelper ();
 
         public HardwareTestHelper ()
         {
@@ -161,6 +164,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             Thread.Sleep (DelayAfterConnectingToHardware);
 
             WaitForText (DataPrefix);
+
+            ReadFromDeviceAndOutputToConsole ();
         }
 
         public void HandleConnectionIOException (string deviceLabel, string devicePort, int deviceBaudRate, Exception exception)
@@ -169,13 +174,15 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
                 throw new Exception ("The " + deviceLabel + " device not found on port: " + devicePort + ". Please ensure it's connected via USB and that the port name is set correctly.", exception);
             else if (exception.Message == "Inappropriate ioctl for device")
                 throw new Exception ("The device serial baud rate appears to be incorrect: " + deviceBaudRate, exception);
+            else if (exception.Message == "No such device or address")
+                throw new Exception ("The " + deviceLabel + " device not found on port: " + devicePort + ". Please ensure it's connected via USB and that the port name is set correctly.", exception);
             else
                 throw exception;
         }
 
         #endregion
 
-        #region Write to Device Functions
+        #region Reset Functions
 
         public virtual void ResetDeviceViaPin ()
         {
@@ -194,7 +201,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             // Re-open the connection to the device
             ConnectDevice ();
 
-            // Ensure the ILLUMINATOR restarted
+            // Ensure the illuminator restarted
             WaitForText (IlluminatorStartText);
         }
 
@@ -245,9 +252,11 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public void ConsoleWriteSerialOutput (string output)
         {
-            Console.WriteLine ("---------- Serial Output From Device -----------");
-            Console.WriteLine (output);
-            Console.WriteLine ("------------------------------------------------");
+            if (!String.IsNullOrEmpty (output)) {
+                Console.WriteLine ("----- Serial Output From Device");
+                Console.WriteLine (output);
+                Console.WriteLine ("-------------------------------");
+            }
         }
 
         #endregion
@@ -293,7 +302,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             var output = String.Empty;
             var containsText = false;
 
-            var startTime = DateTime.Now;
+            Timeout.Start ();
 
             while (!containsText) {
                 output += ReadLineFromDevice ();
@@ -302,14 +311,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
                     Console.WriteLine ("  Found text: " + text);
 
                     containsText = true;
-                }
-
-                var hasTimedOut = DateTime.Now.Subtract (startTime).TotalSeconds > TimeoutWaitingForResponse;
-                if (hasTimedOut && !containsText) {
-                    ConsoleWriteSerialOutput (output);
-
-                    Assert.Fail ("Timed out waiting for text (" + TimeoutWaitingForResponse + " seconds)");
-                }
+                } else
+                    Timeout.Check (TimeoutWaitingForResponse, "Timed out waiting for text: " + text);
             }
 
             return output;
@@ -325,6 +328,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
             var startTime = DateTime.Now;
 
+            Timeout.Start ();
+
             while (!containsData) {
                 output += ReadLineFromDevice ();
 
@@ -336,13 +341,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
                     containsData = true;
                     dataLine = lastLine;
-                }
-
-                var hasTimedOut = DateTime.Now.Subtract (startTime).TotalSeconds > TimeoutWaitingForResponse;
-                if (hasTimedOut && !containsData) {
-                    ConsoleWriteSerialOutput (output);
-
-                    Assert.Fail ("Timed out waiting for data (" + TimeoutWaitingForResponse + " seconds)");
+                } else {
+                    Timeout.Check (TimeoutWaitingForResponse, "Timed out waiting for data");
                 }
             }
 
@@ -360,6 +360,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             var startTime = DateTime.Now;
             var timeInSeconds = 0.0;
 
+            Timeout.Start ();
+
             while (!containsData) {
                 output += ReadLineFromDevice ();
 
@@ -372,14 +374,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
                     containsData = true;
                     dataLine = lastLine;
                     timeInSeconds = DateTime.Now.Subtract (startTime).TotalSeconds;
-                }
-
-                var hasTimedOut = DateTime.Now.Subtract (startTime).TotalSeconds > TimeoutWaitingForResponse;
-                if (hasTimedOut && !containsData) {
-                    ConsoleWriteSerialOutput (output);
-
-                    Assert.Fail ("Timed out waiting for data (" + TimeoutWaitingForResponse + " seconds)");
-                }
+                } else
+                    Timeout.Check (TimeoutWaitingForResponse, "Timed out waiting for data (" + TimeoutWaitingForResponse + " seconds)");
             }
 
             return timeInSeconds;
@@ -406,7 +402,10 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
             var startTime = DateTime.Now;
 
+            Timeout.Start ();
+
             while (powerPinValue != expectedValue) {
+                Timeout.Check (TimeoutWaitingForResponse, "Timed out waiting for simulator pin to switch to " + GetOnOffString (expectedValue));
                 Console.Write (".");
                 powerPinValue = SimulatorDigitalRead (simulatorDigitalPin);
             }
@@ -471,6 +470,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public void AssertDataValueEquals (Dictionary<string, string> dataEntry, string dataKey, int expectedValue)
         {
+            Assert.IsTrue (dataEntry.ContainsKey (dataKey), "The key '" + dataKey + "' is not found in the data entry.");
+
             var value = Convert.ToInt32 (dataEntry [dataKey]);
 
             Assert.AreEqual (expectedValue, value, "Data value for '" + dataKey + "' key is incorrect: " + value);
@@ -536,7 +537,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public void AssertSimulatorPin (string label, int simulatorDigitalPin, bool expectedValue)
         {
-            Console.WriteLine ("Checking light " + label + " pin...");
+            Console.WriteLine ("Checking " + label + " pin...");
             Console.WriteLine ("  Expected value: " + expectedValue);
 
             bool powerPinValue = SimulatorDigitalRead (simulatorDigitalPin);
@@ -553,7 +554,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public void AssertSimulatorPinForDuration (string label, int simulatorDigitalPin, bool expectedValue, int durationInSeconds)
         {
-            Console.WriteLine ("Checking light " + label + " pin for specified duration...");
+            Console.WriteLine ("Checking " + label + " pin for specified duration...");
             Console.WriteLine ("  Expected value: " + expectedValue);
             Console.WriteLine ("  Duration: " + durationInSeconds);
 
@@ -625,6 +626,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
                     if (SimulatorClient != null)
                         SimulatorClient.Disconnect ();
+
+                    Thread.Sleep (DelayAfterDisconnectingFromHardware);
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

@@ -8,7 +8,6 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
     public class LightManualModeTestHelper : GreenSenseIlluminatorHardwareTestHelper
     {
         public LightMode LightMode = LightMode.On;
-        public int DurationToCheckLight = 5;
 
         public void TestLight ()
         {

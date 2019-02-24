@@ -85,6 +85,7 @@
     <Compile Include="StopMinuteCommandTestHelper.cs" />
     <Compile Include="StopMinuteEEPROMTestFixture.cs" />
     <Compile Include="StopMinuteEEPROMTestHelper.cs" />
+    <Compile Include="TimeoutHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
