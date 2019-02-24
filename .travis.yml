@@ -11,6 +11,7 @@ install:
   - sh init-$BUILD_TARGET.sh
 
 script:
+  - sudo rm ~/.platformio -R
   - sh increment-version.sh
   - sh inject-version.sh
   - sh build-$BUILD_TARGET.sh
