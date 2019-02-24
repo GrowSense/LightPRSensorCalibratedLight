@@ -23,7 +23,7 @@ pipeline {
         stage('Prepare') {
             when { expression { !shouldSkipBuild() } }
             steps {
-                sh 'sh prepare.sh'
+                sh 'echo "Prepare script skipped." #sh prepare.sh'
             }
         }
         stage('Init') {
@@ -53,7 +53,7 @@ pipeline {
         stage('Upload simulator') {
             when { expression { !shouldSkipBuild() } }
             steps {
-                sh 'sh upload-simulator.sh'
+                sh 'echo "Simulator upload skipped." #sh upload-simulator.sh'
             }
         }
         stage('Test') {
