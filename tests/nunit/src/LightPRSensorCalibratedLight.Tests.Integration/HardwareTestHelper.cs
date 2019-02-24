@@ -536,7 +536,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public void AssertSimulatorPin (string label, int simulatorDigitalPin, bool expectedValue)
         {
-            Console.WriteLine ("Checking light " + label + " pin for specified duration...");
+            Console.WriteLine ("Checking light " + label + " pin...");
             Console.WriteLine ("  Expected value: " + expectedValue);
 
             bool powerPinValue = SimulatorDigitalRead (simulatorDigitalPin);
