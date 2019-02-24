@@ -38,7 +38,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public int ResetTriggerPin = 4;
 
-        public string IlluminatorStartText = "Starting light controller";
+        public string IlluminatorStartText = "Light controller";
 
         public HardwareTestHelper ()
         {
