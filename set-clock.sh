@@ -7,8 +7,6 @@ fi
 echo "Setting device clock to the current time"
 echo "Device port: $PORT"
 
-#DATE_TIME=$(date '+%d/%m/%Y %T');
-
 DATE_TIME=$(date '+%b %d %Y %T');
 echo "Clock: $DATE_TIME"
 
