@@ -200,56 +200,44 @@ void checkCommand()
 
 void setClock(char* msg)
 {
- 
-  int spacePosition = 0;
-  for (int i = 0; i < sizeof(msg); i++)
-  {
-    if (msg[i] == " ")
-      spacePosition = i;
-  }
-  
-  //if (isDebugMode)
-  //{
-    Serial.print("  Space position: ");
-    Serial.println(spacePosition);
-  //}
+  Serial.println("Setting clock");
   
   int startPosition = 1;
 
-  int dateLength = 10;
+  int dateLength = 11;
 
-  //if (isDebugMode)
-  //{
+  if (isDebugMode)
+  {
     Serial.print("  Date length: ");
     Serial.println(dateLength);
     Serial.print("  Start position: ");
     Serial.println(startPosition);
-  //}
+  }
 
-  char dateValue[11];
+  char dateValue[12];
   readCharArray(msg, dateValue, startPosition, dateLength);
   
-  //if (isDebugMode)
-  //{
+  if (isDebugMode)
+  {
     Serial.print("  Date: ");
     Serial.println(dateValue);
-  //}
+  }
     
   int timeStartPosition = startPosition+dateLength+1;
   
-  //if (isDebugMode)
-  //{
+  if (isDebugMode)
+  {
     Serial.print("  Time start position: ");
     Serial.println(timeStartPosition);
- // }
+  }
     
   int timeLength = 8;
   
-  //if (isDebugMode)
-  //{
+  if (isDebugMode)
+  {
     Serial.print("  Time length: ");
     Serial.println(timeLength);
-  //}
+  }
   
   char timeValue[9];
   readCharArray(msg, timeValue, timeStartPosition, timeLength);
@@ -266,12 +254,12 @@ void setClock(char* msg)
   
   Rtc.SetDateTime(RtcDateTime(dateValue, timeValue));
   
-  //if (isDebugMode)
-  //{
+  if (isDebugMode)
+  {
     Serial.println("RTC time from module");
     RtcDateTime now = Rtc.GetDateTime();
     printDateTime(now);
-  //}
+  }
 }
 
 void readCharArray(char msg[MAX_MSG_LENGTH], char buffer[MAX_MSG_LENGTH], int startPosition, int valueLength)
