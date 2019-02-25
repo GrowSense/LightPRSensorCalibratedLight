@@ -200,23 +200,9 @@ void checkCommand()
 
 void setClock(char* msg)
 {
- 
-  int spacePosition = 0;
-  for (int i = 0; i < sizeof(msg); i++)
-  {
-    if (msg[i] == " ")
-      spacePosition = i;
-  }
-  
-  //if (isDebugMode)
-  //{
-    Serial.print("  Space position: ");
-    Serial.println(spacePosition);
-  //}
-  
   int startPosition = 1;
 
-  int dateLength = 10;
+  int dateLength = 11;
 
   //if (isDebugMode)
   //{
@@ -226,7 +212,7 @@ void setClock(char* msg)
     Serial.println(startPosition);
   //}
 
-  char dateValue[11];
+  char dateValue[12];
   readCharArray(msg, dateValue, startPosition, dateLength);
   
   //if (isDebugMode)

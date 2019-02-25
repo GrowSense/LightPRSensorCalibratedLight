@@ -1,37 +1,38 @@
 ﻿using System;
+
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-	public class StartHourCommandTestHelper : GreenSenseIlluminatorHardwareTestHelper
-	{
-		public int StartHour = 30;
+    public class StartHourCommandTestHelper : GreenSenseIlluminatorHardwareTestHelper
+    {
+        public int StartHour = 30;
 
-		public void TestStartHourCommand()
-		{
-			WriteTitleText("Starting start hour command test");
+        public void TestStartHourCommand ()
+        {
+            WriteTitleText ("Starting start hour command test");
 
-			Console.WriteLine("StartHour: " + StartHour + "%");
-			Console.WriteLine("");
+            Console.WriteLine ("Start hour: " + StartHour);
+            Console.WriteLine ("");
 
-			ConnectDevices(false);
+            ConnectDevices (false);
 
-			SetDeviceReadInterval (1);
+            SetDeviceReadInterval (1);
 
-			SendStartHourCommand();
-		}
+            SendStartHourCommand ();
+        }
 
-		public void SendStartHourCommand()
-		{
-			var command = "E" + StartHour;
+        public void SendStartHourCommand ()
+        {
+            var command = "E" + StartHour;
 
-			WriteParagraphTitleText("Sending command...");
+            WriteParagraphTitleText ("Sending command...");
 
-			SendDeviceCommand(command);
+            SendDeviceCommand (command);
 
-			var dataEntry = WaitForDataEntry();
+            var dataEntry = WaitForDataEntry ();
 
-			WriteParagraphTitleText("Checking threshold value...");
+            WriteParagraphTitleText ("Checking threshold value...");
 
-			AssertDataValueEquals(dataEntry, "E", StartHour);
-		}
-	}
+            AssertDataValueEquals (dataEntry, "E", StartHour);
+        }
+    }
 }

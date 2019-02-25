@@ -31,7 +31,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             SendDeviceCommand (cmd);
 
             // Set the clock on the device
-            var deviceTime = DeviceTime.ToString ("dd/MM/yyyy HH:mm:ss");
+            var deviceTime = DeviceTime.ToString ("MMM dd yyyy HH:mm:ss");
 
             Console.WriteLine ("Device time: " + deviceTime);
 
@@ -43,8 +43,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             SendDeviceCommand ("G" + StopHour);
             SendDeviceCommand ("H" + StopMinute);
 
-            // Skip a line of data in case it isn't up to date yet
-            WaitForData (1);
+            // Skip 2 lines of data in case it isn't up to date yet
+            WaitForData (2);
 
             // Get the next line of data
             var dataEntry = WaitForDataEntry ();
