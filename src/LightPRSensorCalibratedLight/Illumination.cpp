@@ -146,8 +146,11 @@ void illuminateByThresholdIfNeeded(bool onWhenAbove)
   {
     bool lightIsNeeded = checkLightNeededByThreshold(onWhenAbove);    
     
-    Serial.println("Light is needed:");
-    Serial.println(lightIsNeeded);
+    if (isDebugMode)
+    {
+      Serial.print("Light is needed:");
+      Serial.println(lightIsNeeded);
+    }
 
     if (lightIsOn && !lightIsNeeded)
     {
