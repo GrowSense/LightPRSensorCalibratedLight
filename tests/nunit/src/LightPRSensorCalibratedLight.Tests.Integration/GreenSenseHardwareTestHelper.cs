@@ -11,8 +11,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public int DelayAfterTurningLightPRSensorOn = 3;
 
-        public int RawValueMarginOfError = 30;
-        public int CalibratedValueMarginOfError = 3;
+        public int RawValueMarginOfError = 36;
+        public int CalibratedValueMarginOfError = 6;
         public double TimeErrorMargin = 0.3;
 
         public bool CalibrationIsReversedByDefault = true;
