@@ -40,7 +40,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             var failureFile = Path.Combine (failuresDir, fixtureName + ".txt");
 
             if (TestContext.CurrentContext.Result.State == TestState.Error
-            || TestContext.CurrentContext.Result.State == TestState.Failure) {
+                || TestContext.CurrentContext.Result.State == TestState.Failure) {
                 Console.WriteLine ("Test failed.");
 
                 Console.WriteLine (failuresDir);
