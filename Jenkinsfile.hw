@@ -53,7 +53,7 @@ pipeline {
         stage('Upload simulator') {
             when { expression { !shouldSkipBuild() } }
             steps {
-                sh 'echo "Upload simulator script skipped." #sh upload-simulator.sh'
+                sh 'sh upload-simulator.sh ${ILLUMINATOR_SIMULATOR_PORT}'
             }
         }
         stage('Test') {
@@ -115,6 +115,7 @@ def shHide(cmd) {
 }
 
 
+ 
  
  
  
