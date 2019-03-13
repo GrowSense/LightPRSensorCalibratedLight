@@ -1,6 +1,13 @@
 #!/bin/bash
 
-. ./common.sh
+#. ./common.sh
+
+SIMULATOR_PORT=$1
+
+if [ ! $SIMULATOR_PORT ]; then
+  echo "Specify a port as an argument"
+  exit 1
+fi
 
 echo "Uploading simulator to port $SIMULATOR_PORT"
 
