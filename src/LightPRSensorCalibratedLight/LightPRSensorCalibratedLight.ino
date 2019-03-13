@@ -11,7 +11,7 @@
 #define SERIAL_MODE_CSV 1
 #define SERIAL_MODE_QUERYSTRING 2
 
-#define VERSION "1-0-0-0"
+#define VERSION "1-0-0-59"
 
 int serialMode = SERIAL_MODE_CSV;
 
