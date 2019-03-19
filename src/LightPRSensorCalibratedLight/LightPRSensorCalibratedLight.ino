@@ -12,6 +12,7 @@
 #define SERIAL_MODE_QUERYSTRING 2
 
 #define VERSION "1-0-0-59"
+#define BOARD_TYPE "nano"
 
 int serialMode = SERIAL_MODE_CSV;
 
@@ -38,6 +39,15 @@ void setup()
 void serialWriteTitle()
 {
   Serial.println("Light controller");
+  Serial.println("");
+  Serial.println("Family: GreenSense");
+  Serial.println("Group: illuminator");
+  Serial.println("Project: LightPRSensorCalibratedLight");
+  Serial.print("Board: ");
+  Serial.println(BOARD_TYPE);
+  Serial.print("Version: ");
+  Serial.println(VERSION);
+  Serial.println("");
 }
 
 void setupClock()
