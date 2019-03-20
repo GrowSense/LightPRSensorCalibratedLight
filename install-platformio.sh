@@ -1,10 +1,6 @@
 # python
 if ! type "python" > /dev/null; then
-  sudo apt-get install -y python python-pip
-fi
-
-if [ -d "~/.platformio" ]; then
-  sudo rm ~/.platformio
+  sudo apt-get -qq install -y python python-pip
 fi
 
 # platform.io

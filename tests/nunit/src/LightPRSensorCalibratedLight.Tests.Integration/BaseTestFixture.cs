@@ -16,7 +16,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
         public virtual void Initialize ()
         {
             Console.WriteLine ("");
-            Console.WriteLine ("====================");
+            Console.WriteLine ("=====");
             Console.WriteLine ("Preparing test");
             Console.WriteLine (TestContext.CurrentContext.Test.Name);
         }
@@ -27,7 +27,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             HandleFailureFile ();
 
             Console.WriteLine ("Finished test");
-            Console.WriteLine ("====================");
+            Console.WriteLine ("=====");
             Console.WriteLine ("");
         }
 
@@ -41,7 +41,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
             if (TestContext.CurrentContext.Result.State == TestState.Error
                 || TestContext.CurrentContext.Result.State == TestState.Failure) {
-                Console.WriteLine ("Test failed.");
+                Console.WriteLine ("Test failed!");
 
                 Console.WriteLine (failuresDir);
                 Console.WriteLine (fixtureName);

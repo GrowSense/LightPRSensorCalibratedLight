@@ -1,12 +1,14 @@
 pipeline {
     agent any
-    triggers {
-       pollSCM('*/30 * * * *')
-    }
     options {
         disableConcurrentBuilds();
     }
     stages {
+        stage('CleanWS') {
+            steps {
+                deleteDir()
+            }
+        }
         stage('Checkout') {
             steps {
                 checkout scm
@@ -23,7 +25,7 @@ pipeline {
         stage('Prepare') {
             when { expression { !shouldSkipBuild() } }
             steps {
-                sh 'echo "Prepare script skipped." #sh prepare.sh'
+                sh 'echo "Prepare script skipped" #sh prepare.sh'
             }
         }
         stage('Init') {
@@ -65,7 +67,7 @@ pipeline {
         stage('Clean') {
             when { expression { !shouldSkipBuild() } }
             steps {
-                sh 'git checkout src/LightPRSensorCalibratedLight/LightPRSensorCalibratedLight.ino'
+                sh 'sh clean.sh'
             }
         }
         stage('Graduate') {

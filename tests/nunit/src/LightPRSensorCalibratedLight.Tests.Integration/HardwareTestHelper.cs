@@ -51,14 +51,14 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public void WriteTitleText (string titleText)
         {
-            Console.WriteLine ("========================================");
+            Console.WriteLine ("===");
             Console.WriteLine (titleText);
             Console.WriteLine ("");
         }
 
         public void WriteSubTitleText (string subTitleText)
         {
-            Console.WriteLine ("----------------------------------------");
+            Console.WriteLine ("---");
             Console.WriteLine (subTitleText);
             Console.WriteLine ("");
         }
@@ -216,11 +216,20 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         #endregion
 
+        #region Write to Simulator Functions
+
+        public virtual void WriteToSimulator (string text)
+        {
+            SimulatorClient.Client.WriteLine (text);
+        }
+
+        #endregion
+
         #region Read From Device Functions
 
         public string ReadLineFromDevice ()
         {
-            Console.WriteLine ("Reading a line of the output from the device...");
+            //Console.WriteLine ("Reading a line of the output from the device...");
 
             // Read the output
             var output = DeviceClient.ReadLine ();
@@ -233,9 +242,9 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public void ReadFromDeviceAndOutputToConsole ()
         {
-            Console.WriteLine ("");
-            Console.WriteLine ("Reading the output from the device...");
-            Console.WriteLine ("");
+            //Console.WriteLine ("");
+            //Console.WriteLine ("Reading the output from the device...");
+            //Console.WriteLine ("");
 
             // Read the output
             var output = DeviceClient.Read ();
@@ -246,6 +255,18 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             Console.WriteLine ("");
         }
 
+        public string ReadLineFromSimulator ()
+        {
+            //Console.WriteLine ("Reading a line of the output from the simulator...");
+
+            // Read the output
+            var output = SimulatorClient.Client.ReadLine ();
+
+            ConsoleWriteSerialOutput (output);
+
+            return output;
+        }
+
         #endregion
 
         #region Console Write Functions
@@ -253,9 +274,11 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
         public void ConsoleWriteSerialOutput (string output)
         {
             if (!String.IsNullOrEmpty (output)) {
-                Console.WriteLine ("----- Serial Output From Device");
-                Console.WriteLine (output);
-                Console.WriteLine ("-------------------------------");
+                foreach (var line in output.Trim().Split('\r')) {
+                    if (!String.IsNullOrEmpty (line)) {
+                        Console.WriteLine ("> " + line.Trim ());
+                    }
+                }
             }
         }
 
@@ -308,7 +331,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
                 output += ReadLineFromDevice ();
 
                 if (output.Contains (text)) {
-                    Console.WriteLine ("  Found text: " + text);
+                    //Console.WriteLine ("  Found text: " + text);
 
                     containsText = true;
                 } else
@@ -320,7 +343,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public string WaitForDataLine ()
         {
-            Console.WriteLine ("Waiting for data line");
+            Console.WriteLine ("Waiting for a line of data");
 
             var dataLine = String.Empty;
             var output = String.Empty;
@@ -336,9 +359,6 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
                 var lastLine = GetLastLine (output);
 
                 if (IsValidDataLine (lastLine)) {
-                    Console.WriteLine ("  Found valid data line");
-                    Console.WriteLine ("    " + lastLine);
-
                     containsData = true;
                     dataLine = lastLine;
                 } else {
@@ -368,9 +388,6 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
                 var lastLine = GetLastLine (output);
 
                 if (IsValidDataLine (lastLine)) {
-                    Console.WriteLine ("  Found valid data line");
-                    Console.WriteLine ("    " + lastLine);
-
                     containsData = true;
                     dataLine = lastLine;
                     timeInSeconds = DateTime.Now.Subtract (startTime).TotalSeconds;
@@ -510,23 +527,18 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public bool IsWithinRange (double expectedValue, double actualValue, double allowableMarginOfError)
         {
-            Console.WriteLine ("Checking value is within range...");
-            Console.WriteLine ("  Expected value: " + expectedValue);
-            Console.WriteLine ("  Actual value: " + actualValue);
-            Console.WriteLine ("  Allowable margin of error: " + allowableMarginOfError);
-
             var minAllowableValue = expectedValue - allowableMarginOfError;
             if (minAllowableValue < 0)
                 minAllowableValue = 0;
             var maxAllowableValue = expectedValue + allowableMarginOfError;
 
-            Console.WriteLine ("  Max allowable value: " + maxAllowableValue);
-            Console.WriteLine ("  Min allowable value: " + minAllowableValue);
+            Console.WriteLine ("Checking value '" + actualValue + "' is within range of '" + expectedValue + "'");
+            Console.WriteLine ("  Minimum of '" + minAllowableValue + "' and maximum of '" + maxAllowableValue + "', with '" + allowableMarginOfError + "' as the allowable margin of error");
 
             var isWithinRange = actualValue <= maxAllowableValue &&
                                 actualValue >= minAllowableValue;
 
-            Console.WriteLine ("Is within range: " + isWithinRange);
+            Console.WriteLine ("  Is within range: " + isWithinRange);
 
             return isWithinRange;
         }
@@ -619,7 +631,11 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
         {
             if (!disposedValue) {
                 if (disposing) {
-                    ConsoleWriteSerialOutput (FullDeviceOutput);
+                    if (TestContext.CurrentContext.Result.State == TestState.Error
+                        || TestContext.CurrentContext.Result.State == TestState.Failure) {
+                        Console.WriteLine ("Complete device serial output...");
+                        ConsoleWriteSerialOutput (FullDeviceOutput);
+                    }
 
                     if (DeviceClient != null)
                         DeviceClient.Close ();
@@ -629,9 +645,6 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
                     Thread.Sleep (DelayAfterDisconnectingFromHardware);
                 }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
 
                 disposedValue = true;
             }
