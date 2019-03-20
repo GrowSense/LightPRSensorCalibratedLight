@@ -80,10 +80,6 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
                 var expectedText = "Received message: " + message;
                 if (output.Contains (expectedText)) {
                     wasMessageReceived = true;
-
-                    Console.WriteLine ("  Message was received");
-
-                    ConsoleWriteSerialOutput (output);
                 }
 
                 var hasTimedOut = DateTime.Now.Subtract (startTime).TotalSeconds > TimeoutWaitingForResponse;
