@@ -24,7 +24,9 @@ void setup()
 {
   Serial.begin(9600);
 
-  serialWriteTitle();
+  Serial.println("Light controller");
+  
+  serialPrintDeviceInfo();
   
   setupClock();
 
@@ -36,9 +38,8 @@ void setup()
 
 }
 
-void serialWriteTitle()
+void serialPrintDeviceInfo()
 {
-  Serial.println("Light controller");
   Serial.println("");
   Serial.println("Family: GreenSense");
   Serial.println("Group: illuminator");
@@ -158,6 +159,9 @@ void checkCommand()
 
     switch (letter)
     {
+      case '#':
+        serialPrintDeviceInfo();
+        break;
       case 'M':
         setLightMode(msg);
         break;
@@ -198,9 +202,6 @@ void checkCommand()
         break;
       case 'R':
         reverseLightCalibrationValues();
-        break;
-      case '#':
-        serialWriteTitle();
         break;
     }
     forceSerialOutput();
