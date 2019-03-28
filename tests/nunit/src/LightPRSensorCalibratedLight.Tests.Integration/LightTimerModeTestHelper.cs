@@ -43,8 +43,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             SendDeviceCommand ("G" + StopHour);
             SendDeviceCommand ("H" + StopMinute);
 
-            // Skip 2 lines of data in case it isn't up to date yet
-            WaitForData (2);
+            // Skip some data
+            WaitForData (3);
 
             // Get the next line of data
             var dataEntry = WaitForDataEntry ();
