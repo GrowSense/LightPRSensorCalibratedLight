@@ -336,7 +336,7 @@ void serialPrintData()
       Serial.print(darkLightCalibrationValue);
       Serial.print(";B:"); // Bright calibration value
       Serial.print(brightLightCalibrationValue);
-      Serial.print(";Z:");
+      Serial.print(";V:");
       Serial.print(VERSION);
       Serial.print(";E:");
       Serial.print(startHour);
