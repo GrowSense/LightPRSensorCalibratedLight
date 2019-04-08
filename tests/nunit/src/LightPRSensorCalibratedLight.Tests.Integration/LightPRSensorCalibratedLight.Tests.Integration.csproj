@@ -72,6 +72,20 @@
     <Compile Include="StopMinuteEEPROMTestFixture.cs" />
     <Compile Include="StopMinuteEEPROMTestHelper.cs" />
     <Compile Include="TimeoutHelper.cs" />
+    <Compile Include="CalibrateCommandTestFixture.cs" />
+    <Compile Include="CalibrateCommandTestHelper.cs" />
+    <Compile Include="ReadIntervalCommandTestFixture.cs" />
+    <Compile Include="ReadIntervalCommandTestHelper.cs" />
+    <Compile Include="StartHourCommandTestFixture.cs" />
+    <Compile Include="StartHourCommandTestHelper.cs" />
+    <Compile Include="StopHourCommandTestFixture.cs" />
+    <Compile Include="StopHourCommandTestHelper.cs" />
+    <Compile Include="StartMinuteCommandTestHelper.cs" />
+    <Compile Include="StartMinuteCommandTestFixture.cs" />
+    <Compile Include="StopMinuteCommandTestFixture.cs" />
+    <Compile Include="StopMinuteCommandTestHelper.cs" />
+    <Compile Include="ThresholdCommandTestFixture.cs" />
+    <Compile Include="ThresholdCommandTestHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
