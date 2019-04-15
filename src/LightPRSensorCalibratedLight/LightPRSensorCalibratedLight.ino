@@ -11,14 +11,16 @@
 #define SERIAL_MODE_CSV 1
 #define SERIAL_MODE_QUERYSTRING 2
 
-#define VERSION "1-0-0-1"
-#define BOARD_TYPE "uno"
+#define VERSION "1-0-0-73"
+#define BOARD_TYPE "nano"
 
 int serialMode = SERIAL_MODE_CSV;
 
 
 ThreeWire myWire(4,5,2); // IO, SCLK, CE
 RtcDS1302<ThreeWire> Rtc(myWire);
+
+bool isDebug = false;
 
 void setup()
 {
@@ -132,6 +134,19 @@ void printDateTime(const RtcDateTime& dt)
             dt.Month(),
             dt.Day(),
             dt.Year(),
+            dt.Hour(),
+            dt.Minute(),
+            dt.Second() );
+    Serial.print(datestring);
+}
+
+void printTime(const RtcDateTime& dt)
+{
+    char datestring[20];
+
+    snprintf_P(datestring, 
+            countof(datestring),
+            PSTR("%02u:%02u:%02u"),
             dt.Hour(),
             dt.Minute(),
             dt.Second() );
@@ -347,7 +362,7 @@ void serialPrintData()
       Serial.print(";H:");
       Serial.print(stopMinute);
       Serial.print(";C:");
-      printDateTime(Rtc.GetDateTime());
+      printTime(Rtc.GetDateTime());
       Serial.print(";;");
       Serial.println();
     }
@@ -424,3 +439,4 @@ void serialPrintData()
     }
   }*/
 }
+
