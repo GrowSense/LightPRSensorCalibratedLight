@@ -146,7 +146,7 @@ void printTime(const RtcDateTime& dt)
 
     snprintf_P(datestring, 
             countof(datestring),
-            PSTR("%02u:%02u:%02u"),
+            PSTR("%02u-%02u-%02u"),
             dt.Hour(),
             dt.Minute(),
             dt.Second() );
