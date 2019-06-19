@@ -11,6 +11,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
             Letter = "M";
             Label = "light mode";
             Value = (int)LightCommand;
+            ValueIsSavedInEEPROM = false; // TODO: Save light mode in EEPROM in sketch then change this to true
 
             TestCommand ();
         }
