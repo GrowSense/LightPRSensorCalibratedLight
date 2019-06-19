@@ -17,7 +17,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 		{
 			using (var helper = new ReadIntervalCommandTestHelper())
 			{
-				helper.ReadInterval = 1;
+				helper.ReadingInterval = 1;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();
@@ -34,7 +34,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 		{
 			using (var helper = new ReadIntervalCommandTestHelper())
 			{
-				helper.ReadInterval = 5;
+				helper.ReadingInterval = 5;
 
 				helper.DevicePort = GetDevicePort();
 				helper.DeviceBaudRate = GetDeviceSerialBaudRate();

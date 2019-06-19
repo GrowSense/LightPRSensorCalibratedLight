@@ -1,27 +1,22 @@
 ﻿using System;
+
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-	public class ReadIntervalCommandTestHelper : GreenSenseHardwareTestHelper
-	{
-		public int ReadInterval = 1;
+    public class ReadIntervalCommandTestHelper : SerialCommandTestHelper
+    {
+        public int ReadingInterval = 1;
 
-		public ReadIntervalCommandTestHelper()
-		{
-		}
+        public ReadIntervalCommandTestHelper ()
+        {
+        }
 
-		public void TestSetReadIntervalCommand()
-		{
-			WriteTitleText("Starting read interval command test");
+        public void TestSetReadIntervalCommand ()
+        {
+            Letter = "I";
+            Label = "reading interval";
+            Value = ReadingInterval;
 
-			Console.WriteLine("Read interval: " + ReadInterval);
-
-			ConnectDevices(false);
-
-			SetDeviceReadInterval(ReadInterval);
-
-			var dataEntry = WaitForDataEntry();
-
-			AssertDataValueEquals(dataEntry, "I", ReadInterval);
-		}
-	}
+            TestCommand ();
+        }
+    }
 }
