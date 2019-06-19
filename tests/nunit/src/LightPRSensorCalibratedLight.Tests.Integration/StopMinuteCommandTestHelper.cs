@@ -2,37 +2,17 @@
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-    public class StopMinuteCommandTestHelper : GreenSenseIlluminatorHardwareTestHelper
+    public class StopMinuteCommandTestHelper : SerialCommandTestHelper
     {
         public int StopMinute = 30;
 
         public void TestStopMinuteCommand ()
         {
-            WriteTitleText ("Start stop minute command test");
+            Letter = "H";
+            Label = "stop minute";
+            Value = StopMinute;
 
-            Console.WriteLine ("Stop minute: " + StopMinute);
-            Console.WriteLine ("");
-
-            ConnectDevices (false);
-
-            SetDeviceReadInterval (1);
-
-            SendStopMinuteCommand ();
-        }
-
-        public void SendStopMinuteCommand ()
-        {
-            var command = "H" + StopMinute;
-
-            WriteParagraphTitleText ("Sending command...");
-
-            SendDeviceCommand (command);
-
-            var dataEntry = WaitForDataEntry ();
-
-            WriteParagraphTitleText ("Checking threshold value...");
-
-            AssertDataValueEquals (dataEntry, "H", StopMinute);
+            TestCommand ();
         }
     }
 }
