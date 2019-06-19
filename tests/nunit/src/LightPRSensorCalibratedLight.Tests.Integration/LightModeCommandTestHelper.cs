@@ -8,7 +8,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         public void TestLightCommand ()
         {
-            Letter = "m";
+            Letter = "M";
             Label = "light mode";
             Value = (int)LightCommand;
 
