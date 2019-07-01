@@ -44,16 +44,18 @@ pipeline {
                 sh 'sh build-tests.sh'
             }
         }
-        stage('Upload') {
-            when { expression { !shouldSkipBuild() } }
-            steps {
-                sh 'sh upload-uno.sh ${ILLUMINATOR_PORT}'
-            }
-        }
         stage('Upload simulator') {
             when { expression { !shouldSkipBuild() } }
             steps {
                 sh 'sh upload-simulator.sh ${ILLUMINATOR_SIMULATOR_PORT}'
+                sh 'echo "Ensuring the simulator isn\'t resetting the target device..."'
+                sh 'sh send-serial-command.sh "M4:2" ${ILLUMINATOR_PORT}'
+            }
+        }
+        stage('Upload') {
+            when { expression { !shouldSkipBuild() } }
+            steps {
+                sh 'sh upload-uno.sh ${ILLUMINATOR_PORT}'
             }
         }
         stage('Test') {
