@@ -49,7 +49,7 @@ pipeline {
             steps {
                 sh 'sh upload-simulator.sh ${ILLUMINATOR_SIMULATOR_PORT}'
                 sh 'echo "Ensuring the simulator isn\'t resetting the target device..."'
-                sh 'sh send-serial-command.sh "M4:2" ${ILLUMINATOR_PORT}'
+                sh 'sh send-serial-command.sh "M4:2" ${ILLUMINATOR_SIMULATOR_PORT}'
             }
         }
         stage('Upload') {
