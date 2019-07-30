@@ -8,13 +8,14 @@
 #include "LightPRSensor.h"
 #include "Illumination.h"
 
-#define SERIAL_MODE_CSV 1
-#define SERIAL_MODE_QUERYSTRING 2
+// TODO: Remove if not needed. Should be obsolete.
+//#define SERIAL_MODE_CSV 1
+//#define SERIAL_MODE_QUERYSTRING 2
+//int serialMode = SERIAL_MODE_CSV;
 
 #define VERSION "1-0-0-1"
 #define BOARD_TYPE "uno"
 
-int serialMode = SERIAL_MODE_CSV;
 
 
 ThreeWire myWire(4,5,2); // IO, SCLK, CE
@@ -235,38 +236,38 @@ void setClock(char* msg)
 
   int dateLength = 11;
 
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("  Date length: ");
     Serial.println(dateLength);
     Serial.print("  Start position: ");
     Serial.println(startPosition);
-  }
+  }*/
 
   char dateValue[12];
   readCharArray(msg, dateValue, startPosition, dateLength);
   
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("  Date: ");
     Serial.println(dateValue);
-  }
+  }*/
     
   int timeStartPosition = startPosition+dateLength+1;
   
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("  Time start position: ");
     Serial.println(timeStartPosition);
-  }
+  }*/
     
   int timeLength = 8;
   
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("  Time length: ");
     Serial.println(timeLength);
-  }
+  }*/
   
   char timeValue[9];
   readCharArray(msg, timeValue, timeStartPosition, timeLength);
@@ -334,8 +335,9 @@ void serialPrintData()
       Serial.println("Printing serial data");
     }
 
-    if (serialMode == SERIAL_MODE_CSV)
-    {
+    // TODO: Remove if not needed. Should be obsolete.
+    //if (serialMode == SERIAL_MODE_CSV)
+    //{
       Serial.print("D;R:");
       Serial.print(lightLevelRaw);
       Serial.print(";L:");
@@ -368,7 +370,8 @@ void serialPrintData()
       printTime(Rtc.GetDateTime());
       Serial.print(";;");
       Serial.println();
-    }
+    //}
+    // TODO: Remove if not needed. Should be obsolete.
     /*else
     {
       Serial.print("raw=");
