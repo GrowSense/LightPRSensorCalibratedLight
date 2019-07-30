@@ -13,7 +13,7 @@
 #define LIGHT_MODE_AUTO_BELOWTHRESHOLD 3 // Turn on when below the threshold
 #define LIGHT_MODE_AUTO_PWM 4 // Fade on and off at the same brightness as outside
 #define LIGHT_MODE_AUTO_SUPPLEMENT 5 // Supplement the outside light only when needed
-#define LIGHT_MODE_TIMER 6 // Supplement the outside light only when needed
+#define LIGHT_MODE_TIMER 6 // Timer based on clock
 
 extern int threshold;
 extern bool lightIsOn;

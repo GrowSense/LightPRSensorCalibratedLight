@@ -43,6 +43,7 @@ void setup()
 void serialPrintDeviceInfo()
 {
   Serial.println("");
+  Serial.println("-- Start Device Info");
   Serial.println("Family: GreenSense");
   Serial.println("Group: illuminator");
   Serial.println("Project: LightPRSensorCalibratedLight");
@@ -50,6 +51,8 @@ void serialPrintDeviceInfo()
   Serial.println(BOARD_TYPE);
   Serial.print("Version: ");
   Serial.println(VERSION);
+  Serial.println("ScriptCode: illuminator");
+  Serial.println("-- End Device Info");
   Serial.println("");
 }
 
