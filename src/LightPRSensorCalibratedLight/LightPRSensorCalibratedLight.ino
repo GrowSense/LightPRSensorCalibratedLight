@@ -294,8 +294,8 @@ void setClock(char* msg)
 
 void readCharArray(char msg[MAX_MSG_LENGTH], char buffer[MAX_MSG_LENGTH], int startPosition, int valueLength)
 {
-  if (isDebugMode)
-    Serial.println("Reading char array");
+  //if (isDebugMode)
+  //  Serial.println("Reading char array");
 
   for (int i = 0; i < MAX_MSG_LENGTH; i++)
   {
@@ -306,8 +306,8 @@ void readCharArray(char msg[MAX_MSG_LENGTH], char buffer[MAX_MSG_LENGTH], int st
   {
     buffer[i] = msg[startPosition+i];
 
-    if (isDebugMode)
-      Serial.println(buffer[i]);
+    //if (isDebugMode)
+    //  Serial.println(buffer[i]);
   }
 }
 
@@ -330,10 +330,10 @@ void serialPrintData()
 
   if (isReadyToPrintData)
   {
-    if (isDebugMode)
+    /*if (isDebugMode)
     {
       Serial.println("Printing serial data");
-    }
+    }*/
 
     // TODO: Remove if not needed. Should be obsolete.
     //if (serialMode == SERIAL_MODE_CSV)

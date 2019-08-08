@@ -50,11 +50,11 @@ void takeLightPRSensorReading()
 
   if (sensorReadingIsDue)
   {
-    if (isDebugMode)
+    /*if (isDebugMode)
       Serial.println("Sensor reading is due");
 
     if (isDebugMode)
-      Serial.println("Preparing to take reading");
+      Serial.println("Preparing to take reading");*/
 
     lastLightPRSensorReadingTime = millis();
 
@@ -101,16 +101,16 @@ void setupLightPRSensorReadingInterval()
 
   if (eepromIsSet)
   {
-    if (isDebugMode)
-    	Serial.println("EEPROM read interval value has been set. Loading.");
+    //if (isDebugMode)
+    //	Serial.println("EEPROM read interval value has been set. Loading.");
 
     lightPRSensorReadingIntervalInSeconds = getLightPRSensorReadingInterval();
   }
-  else
+  /*else
   {
     if (isDebugMode)
       Serial.println("EEPROM read interval value has not been set. Using defaults.");
-  }
+  }*/
 }
 
 void setLightPRSensorReadingInterval(char* msg)
@@ -122,11 +122,11 @@ void setLightPRSensorReadingInterval(char* msg)
 
 void setLightPRSensorReadingInterval(long newValue)
 {
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("Set sensor reading interval: ");
     Serial.println(newValue);
-  }
+  }*/
 
   EEPROMWriteLong(lightPRSensorReadingIntervalAddress, newValue);
 
@@ -146,11 +146,11 @@ long getLightPRSensorReadingInterval()
     return lightPRSensorReadingIntervalInSeconds;
   else
   {
-    if (isDebugMode)
+    /*if (isDebugMode)
     {
       Serial.print("Read interval found in EEPROM: ");
       Serial.println(value);
-    }
+    }*/
 
     return value;
   }
@@ -169,20 +169,20 @@ void setupCalibrationValues()
 
   if (eepromIsSet)
   {
-    if (isDebugMode)
-    	Serial.println("EEPROM calibration values have been set. Loading.");
+    //if (isDebugMode)
+    //	Serial.println("EEPROM calibration values have been set. Loading.");
 
     darkLightCalibrationValue = getDarkLightCalibrationValue();
     brightLightCalibrationValue = getBrightLightCalibrationValue();
   }
-  else
+  /*else
   {
-    if (isDebugMode)
-      Serial.println("EEPROM calibration values have not been set. Using defaults.");
+    //if (isDebugMode)
+    //  Serial.println("EEPROM calibration values have not been set. Using defaults.");
     
     //setDarkLightCalibrationValue(darkLightCalibrationValue);
     //setBrightLightCalibrationValue(brightLightCalibrationValue);
-  }
+  }*/
 }
 
 void setDarkLightCalibrationValue(char* msg)
@@ -211,11 +211,11 @@ void setDarkLightCalibrationValueToCurrent()
 
 void setDarkLightCalibrationValue(int newValue)
 {
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("Setting dark soil moisture sensor calibration value: ");
     Serial.println(newValue);
-  }
+  }*/
 
   darkLightCalibrationValue = newValue;
   
@@ -250,11 +250,11 @@ void setBrightLightCalibrationValueToCurrent()
 
 void setBrightLightCalibrationValue(int newValue)
 {
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.print("Setting bright soil moisture sensor calibration value: ");
     Serial.println(newValue);
-  }
+  }*/
 
   brightLightCalibrationValue = newValue;
 
@@ -265,8 +265,8 @@ void setBrightLightCalibrationValue(int newValue)
 
 void reverseLightCalibrationValues()
 {
-  if (isDebugMode)
-    Serial.println("Reversing soil moisture sensor calibration values");
+  //if (isDebugMode)
+  //  Serial.println("Reversing soil moisture sensor calibration values");
 
   int tmpValue = darkLightCalibrationValue;
 
@@ -292,11 +292,11 @@ int getDarkLightCalibrationValue()
   {
     int darkLightPRSensorValue = value;
   
-    if (isDebugMode)
+    /*if (isDebugMode)
     {
       Serial.print("Dark calibration value found in EEPROM: ");
       Serial.println(darkLightPRSensorValue);
-    }
+    }*/
 
     return darkLightPRSensorValue;
   }
@@ -309,14 +309,14 @@ int getBrightLightCalibrationValue()
   if (value < 0
       || value > ANALOG_MAX)
     return brightLightCalibrationValue;
-  else
+  /*else
   {
     if (isDebugMode)
     {
       Serial.print("Bright calibration value found in EEPROM: ");
       Serial.println(value);
     }
-  }
+  }*/
 
   return value;
 }
