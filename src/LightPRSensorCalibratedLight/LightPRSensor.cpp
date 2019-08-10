@@ -10,11 +10,11 @@
 #define lightPRSensorPowerPin 12
 
 bool lightPRSensorIsOn = true;
-long lastSensorOnTime = 0;
+unsigned long lastSensorOnTime = 0;
 
 bool lightPRSensorReadingHasBeenTaken = false;
 long lightPRSensorReadingIntervalInSeconds = 1;
-long lastLightPRSensorReadingTime = 0; // Milliseconds
+unsigned long lastLightPRSensorReadingTime = 0; // Milliseconds
 
 int lightLevelCalibrated = 0;
 int lightLevelRaw = 0;

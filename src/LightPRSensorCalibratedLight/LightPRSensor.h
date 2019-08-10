@@ -4,7 +4,7 @@
 extern int lightLevelCalibrated;
 extern int lightLevelRaw;
 
-extern long lastLightPRSensorReadingTime;
+extern unsigned long lastLightPRSensorReadingTime;
 extern long lightPRSensorReadingIntervalInSeconds;
 extern int lightPRSensorReadIntervalIsSetFlagAddress;
 
