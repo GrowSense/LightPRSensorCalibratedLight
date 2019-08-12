@@ -45,7 +45,7 @@ void setupLightPRSensor()
 /* Sensor Readings */
 void takeLightPRSensorReading()
 {
-  bool sensorReadingIsDue = lastLightPRSensorReadingTime + secondsToMilliseconds(lightPRSensorReadingIntervalInSeconds) < millis()
+  bool sensorReadingIsDue = millis() - lastLightPRSensorReadingTime >= secondsToMilliseconds(lightPRSensorReadingIntervalInSeconds)
     || lastLightPRSensorReadingTime == 0;
 
   if (sensorReadingIsDue)

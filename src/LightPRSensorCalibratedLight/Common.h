@@ -3,7 +3,7 @@
 
 extern const int ANALOG_MAX;
 
-extern long lastSerialOutputTime; // Milliseconds
+extern unsigned long lastSerialOutputTime; // Milliseconds
 extern long serialOutputIntervalInSeconds;
 
 extern bool isDebugMode;
@@ -19,10 +19,9 @@ long EEPROMReadLong(int address);
 void setEEPROMFlag(int address);
 void removeEEPROMFlag(int address);
 
-long secondsToMilliseconds(int seconds);
+unsigned long secondsToMilliseconds(int seconds);
 float millisecondsToSecondsWithDecimal(int milliseconds);
 
 void forceSerialOutput();
 
 #endif
-/* SOILMOISTURESENSOR_H_ */

@@ -18,8 +18,8 @@
 extern int threshold;
 extern bool lightIsOn;
 extern bool lightIsNeeded;
-extern long lightStartTime;
-extern long lastLightFinishTime;
+extern unsigned long lightStartTime;
+extern unsigned long lastLightFinishTime;
 
 extern int lightMode;
 extern int thresholdIsSetEEPROMFlagAddress;

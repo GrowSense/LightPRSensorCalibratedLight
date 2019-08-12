@@ -5,7 +5,7 @@
 
 const int ANALOG_MAX = 1023;
 
-long lastSerialOutputTime = 0;
+unsigned long lastSerialOutputTime = 0;
 long serialOutputIntervalInSeconds = 1;
 
 bool isDebugMode = false;
@@ -81,7 +81,7 @@ void removeEEPROMFlag(int address)
   EEPROM.write(address, 0);
 }
 
-long secondsToMilliseconds(int seconds)
+unsigned long secondsToMilliseconds(int seconds)
 {
   return seconds * 1000;
 }

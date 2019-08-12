@@ -14,8 +14,8 @@ int threshold = 30;
 
 bool lightIsOn = 0;
 bool lightIsNeeded = 0;
-long lightStartTime = 0;
-long lastLightFinishTime = 0;
+unsigned long lightStartTime = 0;
+unsigned long lastLightFinishTime = 0;
 
 //int lightMode = LIGHT_MODE_AUTO_PWM;
 int lightMode = LIGHT_MODE_TIMER;
