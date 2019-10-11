@@ -43,9 +43,9 @@
   <ItemGroup>
     <Compile Include="BaseTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GreenSenseHardwareTestHelper.cs" />
+    <Compile Include="GrowSenseHardwareTestHelper.cs" />
     <Compile Include="HardwareTestHelper.cs" />
-    <Compile Include="GreenSenseIrrigatorHardwareTestHelper.cs" />
+    <Compile Include="GrowSenseIrrigatorHardwareTestHelper.cs" />
     <Compile Include="SerialOutputTimeTestFixture.cs" />
     <Compile Include="SerialOutputTimeTestHelper.cs" />
     <Compile Include="LightModeCommandTestFixture.cs" />

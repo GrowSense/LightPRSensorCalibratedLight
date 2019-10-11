@@ -2,11 +2,11 @@
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-    public class GreenSenseIlluminatorHardwareTestHelper : GreenSenseHardwareTestHelper
+    public class GrowSenseIlluminatorHardwareTestHelper : GrowSenseHardwareTestHelper
     {
         public int SimulatorLightPin = 2;
 
-        public GreenSenseIlluminatorHardwareTestHelper ()
+        public GrowSenseIlluminatorHardwareTestHelper ()
         {
         }
 

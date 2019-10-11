@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-    public class LightManualModeTestHelper : GreenSenseIlluminatorHardwareTestHelper
+    public class LightManualModeTestHelper : GrowSenseIlluminatorHardwareTestHelper
     {
         public LightMode LightMode = LightMode.On;
 
