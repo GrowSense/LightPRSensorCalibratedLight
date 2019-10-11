@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-    public class LightTimerModeTestHelper : GreenSenseIlluminatorHardwareTestHelper
+    public class LightTimerModeTestHelper : GrowSenseIlluminatorHardwareTestHelper
     {
         public LightMode Mode = LightMode.Timer;
 

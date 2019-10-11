@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-    public class LightThresholdModeTestHelper : GreenSenseIlluminatorHardwareTestHelper
+    public class LightThresholdModeTestHelper : GrowSenseIlluminatorHardwareTestHelper
     {
         public LightMode LightMode = LightMode.AboveThreshold;
         public int SimulatedLightPercentage = 60;

@@ -23,7 +23,7 @@ mkdir -p $TEMPORARY_DIR
 
 cd $TEMPORARY_DIR
 
-git clone http://github.com/GreenSense/LightPRSensorCalibratedLight -b $BRANCH && \
+git clone http://github.com/GrowSense/LightPRSensorCalibratedLight -b $BRANCH && \
 
 cd LightPRSensorCalibratedLight && \
 sh init.sh && \
