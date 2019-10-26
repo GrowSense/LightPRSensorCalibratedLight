@@ -1,5 +1,5 @@
-#ifndef SOILMOISTURESENSOR_H_
-#define SOILMOISTURESENSOR_H_
+#ifndef LIGHTPRSENSOR_H_
+#define LIGHTPRSENSOR_H_
 
 extern int lightLevelCalibrated;
 extern int lightLevelRaw;
@@ -60,4 +60,4 @@ void restoreDefaultLightPRSensorSettings();
 void restoreDefaultLightPRSensorReadingIntervalSettings();
 void restoreDefaultCalibrationSettings();
 #endif
-/* SOILMOISTURESENSOR_H_ */
+/* LIGHTPRSENSOR_H_ */

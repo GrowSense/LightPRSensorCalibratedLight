@@ -1,5 +1,5 @@
-#ifndef IRRIGATION_H_
-#define IRRIGATION_H_
+#ifndef ILLUMINATION_H_
+#define ILLUMINATION_H_
 
 #include <Arduino.h>
 #include <ThreeWire.h>  
@@ -9,11 +9,11 @@
 
 #define LIGHT_MODE_OFF 0
 #define LIGHT_MODE_ON 1
-#define LIGHT_MODE_AUTO_ABOVETHRESHOLD 2 // Turn on when above the threshold
-#define LIGHT_MODE_AUTO_BELOWTHRESHOLD 3 // Turn on when below the threshold
-#define LIGHT_MODE_AUTO_PWM 4 // Fade on and off at the same brightness as outside
-#define LIGHT_MODE_AUTO_SUPPLEMENT 5 // Supplement the outside light only when needed
-#define LIGHT_MODE_TIMER 6 // Timer based on clock
+#define LIGHT_MODE_TIMER 2 // Timer based on clock
+#define LIGHT_MODE_AUTO_ABOVETHRESHOLD 3 // Turn on when above the threshold
+#define LIGHT_MODE_AUTO_BELOWTHRESHOLD 4 // Turn on when below the threshold
+#define LIGHT_MODE_AUTO_PWM 5 // Fade on and off at the same brightness as outside
+#define LIGHT_MODE_AUTO_SUPPLEMENT 6 // Supplement the outside light only when needed
 
 extern int threshold;
 extern bool lightIsOn;
@@ -87,4 +87,4 @@ void restoreDefaultLightStartMinute();
 
 bool isNowAfterTime(int timeHour, int timeMinute, RtcDS1302<ThreeWire> rtc);
 #endif
-/* IRRIGATION_H_ */
+/* ILLUMINATION_H_ */
