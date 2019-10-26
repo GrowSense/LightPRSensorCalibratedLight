@@ -6,10 +6,10 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
   {
     Off = 0,
     On = 1,
-    Timer = 3,
-    AboveThreshold = 4,
-    BelowThreshold = 5,
-    Fade = 6,
-    Supplement = 7
+    Timer = 2,
+    AboveThreshold = 3,
+    BelowThreshold = 4,
+    Fade = 5,
+    Supplement = 6
   }
 }
