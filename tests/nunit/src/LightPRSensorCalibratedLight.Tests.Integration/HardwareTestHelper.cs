@@ -185,8 +185,8 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
       // Re-open the connection to the device
       ConnectDevice ();
 
-      // Ensure the illuminator restarted
-      WaitForText (IlluminatorStartText);
+      // Wait for the devices to connect
+      WaitForDevicesToConnect ();
     }
     #endregion
     #region Write to Device Functions

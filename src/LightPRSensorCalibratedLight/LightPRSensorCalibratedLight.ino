@@ -30,6 +30,7 @@ void setup()
 
   serialOutputIntervalInSeconds = lightPRSensorReadingIntervalInSeconds;
 
+  Serial.println("Online");
 }
 
 void loop()
