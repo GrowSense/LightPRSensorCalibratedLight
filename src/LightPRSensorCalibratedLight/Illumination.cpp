@@ -4,11 +4,12 @@
 
 #include <EEPROM.h>
 
-#include <duinocom.h>
+#include <duinocom2.h>
 
 #include "Common.h"
 #include "LightPRSensor.h"
 #include "Illumination.h"
+#include "EEPROMHelper.h"
 
 int threshold = 30;
 
@@ -376,7 +377,7 @@ void setThreshold(int newThreshold)
 
   EEPROM.write(thresholdEEPROMAddress, newThreshold);
   
-  setEEPROMFlag(thresholdIsSetEEPROMFlagAddress);
+  EEPROMSetFlag(thresholdIsSetEEPROMFlagAddress);
 }
 
 void setThresholdToCurrent()
@@ -435,7 +436,7 @@ void setLightStartHour(int newStartHour)
 
   EEPROM.write(lightStartHourEEPROMAddress, newStartHour);
   
-  setEEPROMFlag(lightStartHourIsSetEEPROMFlagAddress);
+  EEPROMSetFlag(lightStartHourIsSetEEPROMFlagAddress);
 }
 
 int getLightStartHour()
@@ -486,7 +487,7 @@ void setLightStartMinute(int newStartMinute)
 
   EEPROM.write(lightStartMinuteEEPROMAddress, newStartMinute);
   
-  setEEPROMFlag(lightStartMinuteIsSetEEPROMFlagAddress);
+  EEPROMSetFlag(lightStartMinuteIsSetEEPROMFlagAddress);
 }
 
 int getLightStartMinute()
@@ -537,7 +538,7 @@ void setLightStopHour(int newStopHour)
 
   EEPROM.write(lightStopHourEEPROMAddress, newStopHour);
   
-  setEEPROMFlag(lightStopHourIsSetEEPROMFlagAddress);
+  EEPROMSetFlag(lightStopHourIsSetEEPROMFlagAddress);
 }
 
 int getLightStopHour()
@@ -588,7 +589,7 @@ void setLightStopMinute(int newStopMinute)
 
   EEPROM.write(lightStopMinuteEEPROMAddress, newStopMinute);
   
-  setEEPROMFlag(lightStopMinuteIsSetEEPROMFlagAddress);
+  EEPROMSetFlag(lightStopMinuteIsSetEEPROMFlagAddress);
 }
 
 int getLightStopMinute()
@@ -624,7 +625,7 @@ void restoreDefaultThreshold()
 {
   Serial.println("Reset threshold");
 
-  removeEEPROMFlag(thresholdIsSetEEPROMFlagAddress);
+  EEPROMRemoveFlag(thresholdIsSetEEPROMFlagAddress);
 
   threshold = 30;
 

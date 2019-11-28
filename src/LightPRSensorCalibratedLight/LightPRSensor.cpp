@@ -1,10 +1,11 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
-#include <duinocom.h>
+#include <duinocom2.h>
 
 #include "Common.h"
 #include "LightPRSensor.h"
+#include "EEPROMHelper.h"
 
 #define lightPRSensorPin A0
 #define lightPRSensorPowerPin 12
@@ -340,7 +341,7 @@ void restoreDefaultLightPRSensorSettings()
 
 void restoreDefaultLightPRSensorReadingIntervalSettings()
 {
-  removeEEPROMFlag(lightPRSensorReadIntervalIsSetFlagAddress);
+  EEPROMRemoveFlag(lightPRSensorReadIntervalIsSetFlagAddress);
 
   lightPRSensorReadingIntervalInSeconds = 5;
   serialOutputIntervalInSeconds = 5;
@@ -350,7 +351,7 @@ void restoreDefaultLightPRSensorReadingIntervalSettings()
 
 void restoreDefaultCalibrationSettings()
 {
-  removeEEPROMIsCalibratedFlag();
+  EEPROMRemoveFlag(lightPRSensorIsCalibratedFlagAddress);
 
   darkLightCalibrationValue = (reverseLightPRSensor ? 0 : ANALOG_MAX);
   brightLightCalibrationValue = (reverseLightPRSensor ? ANALOG_MAX : 0);

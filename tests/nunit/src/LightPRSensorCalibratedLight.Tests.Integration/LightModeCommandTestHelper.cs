@@ -2,18 +2,18 @@
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-    public class LightModeCommandTestHelper : SerialCommandTestHelper
+  public class LightModeCommandTestHelper : SerialCommandTestHelper
+  {
+    public LightMode LightCommand = LightMode.On;
+
+    public void TestLightCommand ()
     {
-        public LightMode LightCommand = LightMode.On;
+      Key = "M";
+      Label = "light mode";
+      Value = ((int)LightCommand).ToString ();
+      ValueIsSavedInEEPROM = false; // TODO: Save light mode in EEPROM in sketch then change this to true
 
-        public void TestLightCommand ()
-        {
-            Letter = "M";
-            Label = "light mode";
-            Value = (int)LightCommand;
-            ValueIsSavedInEEPROM = false; // TODO: Save light mode in EEPROM in sketch then change this to true
-
-            TestCommand ();
-        }
+      TestCommand ();
     }
+  }
 }

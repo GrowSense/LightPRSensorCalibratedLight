@@ -2,17 +2,17 @@
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-    public class StartHourCommandTestHelper : SerialCommandTestHelper
+  public class StartHourCommandTestHelper : SerialCommandTestHelper
+  {
+    public int StartHour = 30;
+
+    public void TestStartHourCommand ()
     {
-        public int StartHour = 30;
+      Key = "E";
+      Label = "start hour";
+      Value = StartHour.ToString ();
 
-        public void TestStartHourCommand ()
-        {
-            Letter = "E";
-            Label = "start hour";
-            Value = StartHour;
-
-            TestCommand ();
-        }
+      TestCommand ();
     }
+  }
 }

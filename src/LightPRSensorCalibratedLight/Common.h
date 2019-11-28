@@ -1,6 +1,9 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+#define VERSION "1-0-0-1"
+#define BOARD_TYPE "uno"
+
 extern const int ANALOG_MAX;
 
 extern unsigned long lastSerialOutputTime; // Milliseconds
@@ -13,11 +16,7 @@ extern long loopNumber;
 void serialPrintLoopHeader();
 void serialPrintLoopFooter();
 
-void EEPROMWriteLong(int address, long value);
-long EEPROMReadLong(int address);
-
-void setEEPROMFlag(int address);
-void removeEEPROMFlag(int address);
+int readInt(char* text, int startPosition, int digitCount);
 
 unsigned long secondsToMilliseconds(int seconds);
 float millisecondsToSecondsWithDecimal(int milliseconds);
@@ -25,3 +24,4 @@ float millisecondsToSecondsWithDecimal(int milliseconds);
 void forceSerialOutput();
 
 #endif
+/* COMMON_H_ */

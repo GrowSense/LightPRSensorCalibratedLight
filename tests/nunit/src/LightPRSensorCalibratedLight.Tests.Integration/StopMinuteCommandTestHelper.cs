@@ -2,17 +2,17 @@
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-    public class StopMinuteCommandTestHelper : SerialCommandTestHelper
+  public class StopMinuteCommandTestHelper : SerialCommandTestHelper
+  {
+    public int StopMinute = 30;
+
+    public void TestStopMinuteCommand ()
     {
-        public int StopMinute = 30;
+      Key = "H";
+      Label = "stop minute";
+      Value = StopMinute.ToString ();
 
-        public void TestStopMinuteCommand ()
-        {
-            Letter = "H";
-            Label = "stop minute";
-            Value = StopMinute;
-
-            TestCommand ();
-        }
+      TestCommand ();
     }
+  }
 }

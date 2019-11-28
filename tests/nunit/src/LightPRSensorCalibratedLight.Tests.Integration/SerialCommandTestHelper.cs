@@ -2,53 +2,73 @@
 
 namespace LightPRSensorCalibratedLight.Tests.Integration
 {
-    public class SerialCommandTestHelper : GrowSenseHardwareTestHelper
+  public class SerialCommandTestHelper : GrowSenseHardwareTestHelper
+  {
+    public string Key = "";
+    public string Value = "0";
+    public string Label = "";
+    public bool ValueIsOutputAsData = true;
+    public bool ValueIsSavedInEEPROM = true;
+    public string ExpectedSerialOutputAfterCommand;
+    public bool CheckExpectedSerialOutput = false;
+    public bool SeparateKeyValueWithColon = false;
+
+    public void TestCommand ()
     {
-        public string Letter = "";
-        public int Value = 0;
-        public string Label = "";
-        public bool ValueIsSavedInEEPROM = true;
+      if (CheckExpectedSerialOutput && String.IsNullOrEmpty (ExpectedSerialOutputAfterCommand))
+        ExpectedSerialOutputAfterCommand = Label + ": " + Value;
 
-        public void TestCommand ()
-        {
-            WriteTitleText ("Starting " + Label + " command test");
+      WriteTitleText ("Starting " + Label + " command test");
 
-            Console.WriteLine ("Value for " + Label + ": " + Value);
-            Console.WriteLine ("");
+      Console.WriteLine ("Value for " + Label + ": " + Value);
+      Console.WriteLine ("");
 
-            ConnectDevices ();
+      ConnectDevices ();
 
-            SendCommand ();
+      SendCommand ();
 
-            if (ValueIsSavedInEEPROM)
-                ResetAndCheckSettingIsPreserved ();
-        }
-
-        public void SendCommand ()
-        {
-            WriteParagraphTitleText ("Sending " + Label + " command...");
-
-            var command = Letter + Value;
-
-            SendDeviceCommand (command);
-
-            WriteParagraphTitleText ("Checking " + Label + " value was set...");
-
-            var dataEntry = WaitForDataEntry ();
-
-            AssertDataValueEquals (dataEntry, Letter, Value);
-        }
-
-        public void ResetAndCheckSettingIsPreserved ()
-        {
-            ResetDeviceViaPin ();
-
-            WriteParagraphTitleText ("Checking " + Label + " value is preserved after reset...");
-
-            var dataEntry = WaitForDataEntry ();
-
-            AssertDataValueEquals (dataEntry, Letter, Value);
-        }
+      if (ValueIsSavedInEEPROM)
+        ResetAndCheckSettingIsPreserved ();
     }
+
+    public void SendCommand ()
+    {
+      WriteParagraphTitleText ("Sending " + Label + " command...");
+
+      var command = Key + Value;
+
+      if (SeparateKeyValueWithColon)
+        command = Key + ":" + Value;
+
+      SendDeviceCommand (command);
+
+      WriteParagraphTitleText ("Checking " + Label + " value was set...");
+
+      if (ValueIsOutputAsData) {
+        var dataEntry = WaitForDataEntry ();
+
+        AssertDataValueEquals (dataEntry, Key, Value);
+      }
+
+      if (!String.IsNullOrEmpty (ExpectedSerialOutputAfterCommand))
+        WaitForText (ExpectedSerialOutputAfterCommand);
+    }
+
+    public void ResetAndCheckSettingIsPreserved ()
+    {
+      ResetDeviceViaPin ();
+
+      WriteParagraphTitleText ("Checking " + Label + " value is preserved after reset...");
+
+      if (ValueIsOutputAsData) {
+        var dataEntry = WaitForDataEntry ();
+
+        AssertDataValueEquals (dataEntry, Key, Value);
+      }
+
+      if (!String.IsNullOrEmpty (ExpectedSerialOutputAfterCommand))
+        WaitForText (ExpectedSerialOutputAfterCommand);
+    }
+  }
 }
 
