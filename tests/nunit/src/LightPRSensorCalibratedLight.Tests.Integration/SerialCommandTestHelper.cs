@@ -7,8 +7,9 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
     public string Key = "";
     public string Value = "0";
     public string Label = "";
+    public string ExpectedValue = "";
     public bool ValueIsOutputAsData = true;
-    public bool ValueIsSavedInEEPROM = true;
+    public bool ValueIsSavedAfterReset = true;
     public string ExpectedSerialOutputAfterCommand;
     public bool CheckExpectedSerialOutput = false;
     public bool SeparateKeyValueWithColon = false;
@@ -17,6 +18,9 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
     {
       if (CheckExpectedSerialOutput && String.IsNullOrEmpty (ExpectedSerialOutputAfterCommand))
         ExpectedSerialOutputAfterCommand = Label + ": " + Value;
+        
+      if (String.IsNullOrEmpty (ExpectedValue))
+        ExpectedValue = Value;
 
       WriteTitleText ("Starting " + Label + " command test");
 
@@ -27,7 +31,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
       SendCommand ();
 
-      if (ValueIsSavedInEEPROM)
+      if (ValueIsSavedAfterReset)
         ResetAndCheckSettingIsPreserved ();
     }
 
@@ -47,7 +51,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
       if (ValueIsOutputAsData) {
         var dataEntry = WaitForDataEntry ();
 
-        AssertDataValueEquals (dataEntry, Key, Value);
+        AssertDataValueEquals (dataEntry, Key, ExpectedValue);
       }
 
       if (!String.IsNullOrEmpty (ExpectedSerialOutputAfterCommand))
@@ -63,7 +67,7 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
       if (ValueIsOutputAsData) {
         var dataEntry = WaitForDataEntry ();
 
-        AssertDataValueEquals (dataEntry, Key, Value);
+        AssertDataValueEquals (dataEntry, Key, ExpectedValue);
       }
 
       if (!String.IsNullOrEmpty (ExpectedSerialOutputAfterCommand))

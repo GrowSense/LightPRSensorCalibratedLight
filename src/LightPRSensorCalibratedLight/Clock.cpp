@@ -6,6 +6,7 @@
 #include <ThreeWire.h>  
 #include <RtcDS1302.h>
 #include <Clock.h>
+#include <duinocom2.h>
 
 ThreeWire myWire(4,5,2); // IO, SCLK, CE
 RtcDS1302<ThreeWire> Rtc(myWire);
@@ -38,23 +39,24 @@ void setupClock()
         
       Rtc.SetIsRunning(true);
   }
-
+  
+  RtcDateTime now = Rtc.GetDateTime();
   RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-  //if (now < compiled) 
-  //{
-  //    if (isDebugMode)
-  //      Serial.println("RTC is older than compile time!  (Updating DateTime)");
+  if (now < compiled) 
+  {
+      if (isDebugMode)
+        Serial.println("RTC is older than compile time!  (Updating DateTime)");
         
       Rtc.SetDateTime(compiled);
-  //}
+  }
 
-  RtcDateTime now = Rtc.GetDateTime();
+  /*RtcDateTime now = Rtc.GetDateTime();
   
   Serial.println();
   Serial.print("Clock: ");
   printDateTime(now);
   Serial.println();
-  Serial.println();
+  Serial.println();*/
 }
 
 void loopClock()
@@ -99,8 +101,9 @@ void printTime(const RtcDateTime& dt)
 void setClock(char* msg)
 {
   Serial.println("Setting clock");
+  Serial.println(msg);
   
-  int startPosition = 1;
+  int startPosition = 0;
 
   int dateLength = 11;
 
@@ -114,12 +117,12 @@ void setClock(char* msg)
 
   char dateValue[12];
   readCharArray(msg, dateValue, startPosition, dateLength);
-  
-  /*if (isDebugMode)
+
+  if (isDebugMode)
   {
     Serial.print("  Date: ");
     Serial.println(dateValue);
-  }*/
+  }
     
   int timeStartPosition = startPosition+dateLength+1;
   
@@ -140,15 +143,15 @@ void setClock(char* msg)
   char timeValue[9];
   readCharArray(msg, timeValue, timeStartPosition, timeLength);
   
-  //if (isDebugMode)
-  //{
+  if (isDebugMode)
+  {
     Serial.print("  Date: '");
     Serial.print(dateValue);
     Serial.println("'");
     Serial.print("  Time: '");
     Serial.print(timeValue);
     Serial.println("'");
-  //}
+  }
   
   Rtc.SetDateTime(RtcDateTime(dateValue, timeValue));
   
@@ -164,11 +167,6 @@ void readCharArray(char msg[MAX_MSG_LENGTH], char buffer[MAX_MSG_LENGTH], int st
 {
   //if (isDebugMode)
   //  Serial.println("Reading char array");
-
-  for (int i = 0; i < MAX_MSG_LENGTH; i++)
-  {
-      buffer[i] = '\0';
-  }
   
   for (int i = 0; i < valueLength; i++)
   {
@@ -176,6 +174,9 @@ void readCharArray(char msg[MAX_MSG_LENGTH], char buffer[MAX_MSG_LENGTH], int st
 
     //if (isDebugMode)
     //  Serial.println(buffer[i]);
+    
+    if (i == valueLength - 1)
+      buffer[i+1] = '\0';
   }
 }
 

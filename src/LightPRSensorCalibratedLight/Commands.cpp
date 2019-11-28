@@ -33,36 +33,39 @@ void handleCommand(char* msg)
   Serial.print("Received message: ");
   Serial.println(msg);
         
-  char letter = msg[0];
-
-  Serial.print("Received message: ");
-  Serial.println(msg);
-
   if (isKeyValue(msg))
   {
     Serial.println("  Is key value");
   
     char* key = getKey(msg);
   
-    Serial.print("  Key: \"");
+    Serial.print("  Key: '");
     Serial.print(key);
-    Serial.println("\"");
+    Serial.println("'");
   
     char* value = getValue(msg);
   
-    Serial.print("  Value: \"");
+    Serial.print("  Value: '");
     Serial.print(value);
-    Serial.println("\"");
+    Serial.println("'");
 
     if (strcmp(key, "Name") == 0)
     {
-      if (isDebugMode)
-        Serial.println("  Set device name");
+      //if (isDebugMode)
+      //  Serial.println("  Set device name");
       setDeviceName(value);
+    }
+    if (strcmp(key, "C") == 0)
+    {
+      //if (isDebugMode)
+      //  Serial.println("  Set clock");
+      setClock(value);
     }
   }
   else
   {
+    char letter = msg[0];
+    
     switch (letter)
     {
       case '#':
@@ -101,10 +104,6 @@ void handleCommand(char* msg)
       case 'Z':
         Serial.println("Toggling IsDebug");
         isDebugMode = !isDebugMode;
-        break;
-      case 'C':
-        Serial.println("Setting clock");
-        setClock(msg);
         break;
       case 'R':
         reverseLightCalibrationValues();

@@ -78,6 +78,8 @@
     <Compile Include="SerialCommandTestHelper.cs" />
     <Compile Include="DeviceNameCommandTestFixture.cs" />
     <Compile Include="GrowSenseIlluminatorHardwareTestHelper.cs" />
+    <Compile Include="ClockCommandTestFixture.cs" />
+    <Compile Include="ClockCommandTestHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

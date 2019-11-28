@@ -66,7 +66,7 @@ void serialPrintData()
     Serial.print(";H:");
     Serial.print(stopMinute);
     Serial.print(";C:");
-    printTime(Rtc.GetDateTime());
+    printDateTime(Rtc.GetDateTime());
     Serial.print(";;");
     Serial.println();
 

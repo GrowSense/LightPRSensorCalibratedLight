@@ -166,7 +166,7 @@ void illuminateByThresholdIfNeeded(bool onWhenAbove)
 
 bool checkLightNeededByThreshold(bool onWhenAbove)
 {
-  if (isDebugMode)
+  /*if (isDebugMode)
   {
     Serial.println("Checking if light is needed in threshold mode");
       
@@ -174,7 +174,7 @@ bool checkLightNeededByThreshold(bool onWhenAbove)
     Serial.println(lightLevelCalibrated);
     Serial.print("Threshold: ");
     Serial.println(threshold);  
-  }
+  }*/
     
   if (onWhenAbove)
   {  
@@ -299,8 +299,8 @@ void lightOn()
 {
   if (!lightIsOn)
   {
-    if (isDebugMode)
-      Serial.println("Turning light on");
+    //if (isDebugMode)
+    //  Serial.println("Turning light on");
 
     digitalWrite(LIGHT_PIN, HIGH);
     lightIsOn = true;
@@ -313,8 +313,8 @@ void lightOff()
 {
   if (lightIsOn)
   {
-    if (isDebugMode)
-      Serial.println("Turning light off");
+    //if (isDebugMode)
+    //  Serial.println("Turning light off");
     
     digitalWrite(LIGHT_PIN, LOW);
     lightIsOn = false;

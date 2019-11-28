@@ -574,12 +574,14 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
       var dictionary = new Dictionary<string, string> ();
 
       if (IsValidDataLine (outputLine)) {
-        foreach (var pair in outputLine.Split(';')) {
-          var parts = pair.Split (':');
+        foreach (var pair in outputLine.Split(';')) {          
+          if (pair.Contains (":")) {
+            var colonPosition = pair.IndexOf (":");
+            var part1 = pair.Substring (0, colonPosition);
+            var part2 = pair.Substring (colonPosition + 1, pair.Length - colonPosition - 1);
 
-          if (parts.Length == 2) {
-            var key = parts [0];
-            var value = parts [1];
+            var key = part1;
+            var value = part2;
             dictionary [key] = value;
           }
         }
