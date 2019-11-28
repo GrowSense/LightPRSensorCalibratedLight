@@ -13,6 +13,9 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
     public override void PrepareDeviceForTest (bool consoleWriteDeviceOutput)
     {
       base.PrepareDeviceForTest (false);
+      
+      // TODO: Remove if not needed. Disabled because it's not working.
+      //SendClockCommand ();
 
       if (consoleWriteDeviceOutput)
         ReadFromDeviceAndOutputToConsole ();

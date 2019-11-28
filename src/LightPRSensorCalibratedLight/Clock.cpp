@@ -13,49 +13,56 @@ RtcDS1302<ThreeWire> Rtc(myWire);
 
 void setupClock()
 {
-    Rtc.Begin();
-    
-    if (isDebugMode)
-    {
-      Serial.println("Compile Date:");
-      Serial.println(__DATE__);
-      Serial.println(" Compile Time:");
-      Serial.println(__TIME__);
-    }
-    
-    if (Rtc.GetIsWriteProtected())
-    {
-        if (isDebugMode)
-          Serial.println("RTC was write protected, enabling writing now");
-          
-        Rtc.SetIsWriteProtected(false);
-    }
+  Rtc.Begin();
+  
+  if (isDebugMode)
+  {
+    Serial.println("Compile Date:");
+    Serial.println(__DATE__);
+    Serial.println(" Compile Time:");
+    Serial.println(__TIME__);
+  }
+  
+  if (Rtc.GetIsWriteProtected())
+  {
+      if (isDebugMode)
+        Serial.println("RTC was write protected, enabling writing now");
+        
+      Rtc.SetIsWriteProtected(false);
+  }
 
-    if (!Rtc.GetIsRunning())
-    {
-        if (isDebugMode)
-          Serial.println("RTC was not actively running, starting now");
-          
-        Rtc.SetIsRunning(true);
-    }
+  if (!Rtc.GetIsRunning())
+  {
+      if (isDebugMode)
+        Serial.println("RTC was not actively running, starting now");
+        
+      Rtc.SetIsRunning(true);
+  }
 
-    RtcDateTime now = Rtc.GetDateTime();
-    RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-    if (now < compiled) 
-    {
-        if (isDebugMode)
-          Serial.println("RTC is older than compile time!  (Updating DateTime)");
-          
-        Rtc.SetDateTime(compiled);
-    }
+  RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+  //if (now < compiled) 
+  //{
+  //    if (isDebugMode)
+  //      Serial.println("RTC is older than compile time!  (Updating DateTime)");
+        
+      Rtc.SetDateTime(compiled);
+  //}
+
+  RtcDateTime now = Rtc.GetDateTime();
+  
+  Serial.println();
+  Serial.print("Clock: ");
+  printDateTime(now);
+  Serial.println();
+  Serial.println();
 }
 
 void loopClock()
 {
-  RtcDateTime now = Rtc.GetDateTime();
+  //RtcDateTime now = Rtc.GetDateTime();
 
   //printDateTime(now);
-  Serial.println();
+  //Serial.println();
 }
 
 #define countof(a) (sizeof(a) / sizeof(a[0]))

@@ -43,9 +43,9 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
 
         SetDeviceReadInterval (1);
 
-        SetDryCalibrationValue (AnalogPinMaxValue);
+        SetDarkCalibrationValue (AnalogPinMaxValue);
 
-        SetWetCalibrationValue (0);
+        SetBrightCalibrationValue (0);
 
         if (CalibrationIsReversedByDefault)
           ReverseDeviceCalibration ();
@@ -107,24 +107,24 @@ namespace LightPRSensorCalibratedLight.Tests.Integration
       SendDeviceCommand (cmd);
     }
 
-    public void SetDryCalibrationValue (int value)
+    public void SetDarkCalibrationValue (int value)
     {
       var cmd = "D" + value;
 
       Console.WriteLine ("");
-      Console.WriteLine ("Setting dry calibration value to: " + value);
+      Console.WriteLine ("Setting dark calibration value to: " + value);
       Console.WriteLine ("  Sending '" + cmd + "' command to device");
       Console.WriteLine ("");
 
       SendDeviceCommand (cmd);
     }
 
-    public void SetWetCalibrationValue (int value)
+    public void SetBrightCalibrationValue (int value)
     {
-      var cmd = "W" + value;
+      var cmd = "B" + value;
 
       Console.WriteLine ("");
-      Console.WriteLine ("Setting wet calibration value to: " + value);
+      Console.WriteLine ("Setting bright calibration value to: " + value);
       Console.WriteLine ("  Sending '" + cmd + "' command to device");
       Console.WriteLine ("");
 
