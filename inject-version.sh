@@ -12,6 +12,6 @@ else
 fi
 
 echo "Version: $FULL_VERSION"
-SOURCE_FILE="src/LightPRSensorCalibratedLight/LightPRSensorCalibratedLight.ino"
+SOURCE_FILE="src/LightPRSensorCalibratedLight/Common.h"
 
 sed -i "s/#define VERSION .*/#define VERSION \"$FULL_VERSION\"/" $SOURCE_FILE

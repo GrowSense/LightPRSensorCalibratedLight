@@ -5,6 +5,6 @@ if [ ! $BOARD_TYPE ]; then
   exit 1
 fi
 
-SOURCE_FILE="src/LightPRSensorCalibratedLight/LightPRSensorCalibratedLight.ino"
+SOURCE_FILE="src/LightPRSensorCalibratedLight/Common.h"
 
 sed -i "s/#define BOARD_TYPE .*/#define BOARD_TYPE \"$BOARD_TYPE\"/" $SOURCE_FILE
