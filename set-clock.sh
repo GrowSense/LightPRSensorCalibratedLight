@@ -10,4 +10,4 @@ echo "Device port: $PORT"
 DATE_TIME=$(date '+%b %d %Y %T');
 echo "Clock: $DATE_TIME"
 
-echo "C$DATE_TIME" > "$PORT"
+echo "C:$DATE_TIME" > "$PORT"
