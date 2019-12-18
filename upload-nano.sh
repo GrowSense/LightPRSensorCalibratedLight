@@ -6,7 +6,8 @@ fi
 
 echo "Port: $PORT_NAME"
 
-sh inject-board-type.sh "nano" && \
+sh inject-board-type.sh "nano" || exit 1
+sh inject-version.sh || exit 1
 
 pio run --target upload --environment=nanoatmega328 --upload-port=$PORT_NAME || exit 1
 

@@ -37,7 +37,9 @@ void serialPrintData()
 
   if (isReadyToPrintData)
   {
-    Serial.print("D;R:");
+    Serial.print("D;Name:");
+    Serial.print(deviceName);
+    Serial.print(";R:");
     Serial.print(lightLevelRaw);
     Serial.print(";L:");
     Serial.print(lightLevelCalibrated);
