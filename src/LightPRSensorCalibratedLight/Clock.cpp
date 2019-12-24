@@ -40,15 +40,15 @@ void setupClock()
       Rtc.SetIsRunning(true);
   }
   
-  RtcDateTime now = Rtc.GetDateTime();
-  RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-  if (now < compiled) 
-  {
-      if (isDebugMode)
-        Serial.println("RTC is older than compile time!  (Updating DateTime)");
+  //RtcDateTime now = Rtc.GetDateTime();
+  //RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+  //if (now < compiled) 
+  //{
+  //    if (isDebugMode)
+  //      Serial.println("RTC is older than compile time!  (Updating DateTime)");
         
-      Rtc.SetDateTime(compiled);
-  }
+  //    Rtc.SetDateTime(compiled);
+  //}
 
   /*RtcDateTime now = Rtc.GetDateTime();
   
