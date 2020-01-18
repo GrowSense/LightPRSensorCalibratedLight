@@ -65,18 +65,18 @@ void EEPROMWriteCharsAndSetFlag(int flagAddress, int address, char* data)
   EEPROMSetFlag(flagAddress);
   EEPROMWriteChars(address, data);
 }
- 
+
 String EEPROMReadString(int address)
 {
   if (isDebugEEPROMMode)
     Serial.println("Reading string from EEPROM...");
-    
+
   int i = 0;
   char k;
-  char output[10];
+  char output[20];
   k=EEPROM.read(address);
   while(k != '\0' && i<500)   //Read until null character
-  {    
+  {
     k=EEPROM.read(address+i);
     //if (isDebugEEPROMMode)
     //  Serial.println(k);
@@ -84,14 +84,14 @@ String EEPROMReadString(int address)
     i++;
   }
   output[i]='\0';
-  
+
   if (isDebugEEPROMMode)
   {
     Serial.print("  ");
     Serial.println(output);
     Serial.println();
   }
-  
+
   return String(output);
 }
 
@@ -112,7 +112,7 @@ String EEPROMReadStringIfSet(int flagAddress, int valueAddress, char* defaultVal
   {
     if (isDebugEEPROMMode)
       Serial.println("    Flag is set. Reading from EEPROM");
-      
+
     output = EEPROMReadString(valueAddress);
   }
   else
@@ -123,7 +123,7 @@ String EEPROMReadStringIfSet(int flagAddress, int valueAddress, char* defaultVal
       output = String(defaultValue);
     }
   }
-  
+
   if (isDebugEEPROMMode)
   {
     Serial.print("    Value: ");
@@ -131,7 +131,7 @@ String EEPROMReadStringIfSet(int flagAddress, int valueAddress, char* defaultVal
     Serial.println("  Finished reading chars from EEPROM if set");
     Serial.println();
   }
-  
+
   return output;
 }
 
