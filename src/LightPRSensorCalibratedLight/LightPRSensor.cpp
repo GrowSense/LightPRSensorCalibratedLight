@@ -22,9 +22,9 @@ int lightLevelRaw = 0;
 
 bool reverseLightPRSensor = false;
 //int darkLightCalibrationValue = ANALOG_MAX;
-int darkLightCalibrationValue = (reverseLightPRSensor ? 800 : 0);
+int darkLightCalibrationValue = (reverseLightPRSensor ? ANALOG_MAX : 0);
 //int brightLightCalibrationValue = 0;
-int brightLightCalibrationValue = (reverseLightPRSensor ? 0 : 800);
+int brightLightCalibrationValue = (reverseLightPRSensor ? 0 : ANALOG_MAX);
 
 #define lightPRSensorIsCalibratedFlagAddress 1
 #define darkLightCalibrationValueAddress 2
@@ -133,7 +133,7 @@ void setLightPRSensorReadingInterval(long newValue)
 
   setEEPROMLightPRSensorReadingIntervalIsSetFlag();
 
-  lightPRSensorReadingIntervalInSeconds = newValue; 
+  lightPRSensorReadingIntervalInSeconds = newValue;
 
   serialOutputIntervalInSeconds = newValue;
 }
@@ -180,7 +180,7 @@ void setupCalibrationValues()
   {
     //if (isDebugMode)
     //  Serial.println("EEPROM calibration values have not been set. Using defaults.");
-    
+
     //setDarkLightCalibrationValue(darkLightCalibrationValue);
     //setBrightLightCalibrationValue(brightLightCalibrationValue);
   }*/
@@ -219,7 +219,7 @@ void setDarkLightCalibrationValue(int newValue)
   }*/
 
   darkLightCalibrationValue = newValue;
-  
+
   EEPROMWriteLong(darkLightCalibrationValueAddress, newValue);
 
   setEEPROMIsCalibratedFlag();
@@ -260,7 +260,7 @@ void setBrightLightCalibrationValue(int newValue)
   brightLightCalibrationValue = newValue;
 
   EEPROMWriteLong(brightLightCalibrationValueAddress, newValue);
-  
+
   setEEPROMIsCalibratedFlag();
 }
 
@@ -292,7 +292,7 @@ int getDarkLightCalibrationValue()
   else
   {
     int darkLightPRSensorValue = value;
-  
+
     /*if (isDebugMode)
     {
       Serial.print("Dark calibration value found in EEPROM: ");
